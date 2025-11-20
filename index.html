@@ -395,6 +395,7 @@
                     <!-- Player Stats (Top Left) -->
                     <div style="position: absolute; top: 20px; left: 20px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 12px; border: 2px solid #334155;">
                         <div style="font-size: 18px; margin: 5px 0; color: #ef4444;">❤️ <span id="playerHP">100</span>/<span id="playerMaxHP">100</span></div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #10b981;">💚 Lives: <span id="livesCount">5</span>/5</div>
                         <div style="font-size: 18px; margin: 5px 0; color: #fbbf24;">🍰 <span id="playerBAKE">0</span> BAKE</div>
                         <div style="font-size: 18px; margin: 5px 0; color: #22c55e;">🏆 <span id="killCount">0</span> kills</div>
                         <div style="font-size: 18px; margin: 5px 0; color: #ec4899;">🔥 <span id="streakCount">0</span>x streak</div>
@@ -413,7 +414,7 @@
                             <div style="font-size: 64px; filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.5));">💁‍♀️</div>
                             <div style="flex: 1;">
                                 <div style="font-size: 18px; font-weight: bold; color: #fce7f3; margin-bottom: 8px; letter-spacing: 2px;">SARAH</div>
-                                <div id="sarahText" style="font-size: 22px; color: #ffffff; line-height: 1.5; font-weight: 500;">Good luck out there! 💕</div>
+                                <div id="sarahText" style="font-size: 32px; color: #ffffff; line-height: 1.4; font-weight: 600; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Good luck out there! 💕</div>
                             </div>
                         </div>
                     </div>
@@ -955,7 +956,8 @@
                 speed: 4,
                 baseSpeed: 4,
                 shield: false,
-                shieldTime: 0
+                shieldTime: 0,
+                tacticalCooldown: 0 // Add cooldown tracker
             };
             
             enemies = [];
@@ -1082,6 +1084,37 @@
             const secs = gameTime % 60;
             document.getElementById('gameTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
             
+            // Tactical cooldown
+            if (player.tacticalCooldown > 0) {
+                player.tacticalCooldown--;
+            }
+            
+            // Activate tactical on 'E' key
+            if (keys['e'] && player.tacticalCooldown === 0 && inventory.tacticals.length > 0) {
+                const tactical = inventory.tacticals[0]; // Use first purchased tactical
+                keys['e'] = false; // Prevent rapid fire
+                
+                // Simple tactical effects (expand these later)
+                if (tactical === 'orbital' || tactical === 'airstrike') {
+                    // Damage all enemies on screen
+                    enemies.forEach(enemy => {
+                        enemy.hp -= 100;
+                    });
+                    player.tacticalCooldown = 600; // 10 second cooldown
+                    showSarahMessage('pickup_damage');
+                } else if (tactical === 'shield') {
+                    player.shield = true;
+                    player.shieldTime = 600; // 10 seconds
+                    player.tacticalCooldown = 600;
+                    showSarahMessage('pickup_shield');
+                } else if (tactical === 'heal') {
+                    player.hp = Math.min(player.maxHp, player.hp + 100);
+                    document.getElementById('playerHP').textContent = Math.floor(player.hp);
+                    player.tacticalCooldown = 300; // 5 second cooldown
+                    showSarahMessage('pickup_health');
+                }
+            }
+            
             // Player shooting - shoot more consistently
             if (mouse.clicked && Math.random() < 0.3) {
                 shoot();
@@ -1154,10 +1187,10 @@
             
             // Update enemies
             enemies.forEach((enemy, index) => {
-                // Enemy AI: sometimes target other enemies (30% chance), otherwise target player
+                // Enemy AI: sometimes target other enemies (80% chance), otherwise target player (20%)
                 let targetX, targetY;
                 if (!enemy.target || Math.random() < 0.01) { // Reassign target occasionally
-                    if (Math.random() < 0.6 && enemies.length > 1) {
+                    if (Math.random() < 0.8 && enemies.length > 1) {
                         // Target random enemy
                         const otherEnemies = enemies.filter((_, i) => i !== index);
                         enemy.target = otherEnemies[Math.floor(Math.random() * otherEnemies.length)];
@@ -1368,7 +1401,7 @@
                     
                     if (distPlayer < player.size) {
                         if (!player.shield) {
-                            player.hp -= bullet.damage;
+                            player.hp -= bullet.damage * 0.5; // Reduce damage to 50% so health decrements gradually
                             streak = 0;
                             document.getElementById('playerHP').textContent = Math.max(0, Math.floor(player.hp));
                             document.getElementById('streakCount').textContent = 0;
@@ -1520,8 +1553,16 @@
             
             ctx.rotate(player.angle);
             
-            // Draw rectangle instead of emoji
-            ctx.fillStyle = '#10b981'; // Green for player
+            // Draw rectangle with skin color if purchased
+            let playerColor = '#10b981'; // Default green
+            if (inventory.skins.includes('gold')) playerColor = '#fbbf24'; // Gold
+            else if (inventory.skins.includes('diamond')) playerColor = '#38bdf8'; // Diamond blue
+            else if (inventory.skins.includes('ruby')) playerColor = '#ef4444'; // Ruby red
+            else if (inventory.skins.includes('emerald')) playerColor = '#10b981'; // Emerald (brighter)
+            else if (inventory.skins.includes('carbon')) playerColor = '#1e293b'; // Carbon black
+            else if (inventory.skins.includes('platinum')) playerColor = '#94a3b8'; // Platinum
+            
+            ctx.fillStyle = playerColor;
             ctx.fillRect(-player.size/2, -player.size/2, player.size, player.size);
             
             // Draw username on rectangle
@@ -1574,11 +1615,13 @@
                     const playAgain = await showCustomModal('🏆 VICTORY!', `You won ${pot.toLocaleString()} BAKE!\n\nKills: ${kills}\nTime: ${Math.floor(gameTime/60)}:${(gameTime%60).toString().padStart(2,'0')}`, [{text: 'Play Again'}, {text: 'Exit'}]);
                     if (playAgain) {
                         lives = 5;
+                        document.getElementById('livesCount').textContent = lives;
                         totalKills = 0;
                         document.getElementById('gameArea').style.display = 'none';
                         document.getElementById('vehicleSelect').style.display = 'block';
                     } else {
                         lives = 5;
+                        document.getElementById('livesCount').textContent = lives;
                         totalKills = 0;
                         document.getElementById('gameArea').style.display = 'none';
                         document.getElementById('gameSetup').style.display = 'block';
@@ -1587,22 +1630,25 @@
                 }, 2000);
             } else {
                 lives--;
+                document.getElementById('livesCount').textContent = lives; // Update lives display
                 totalKills += kills;
                 
                 if (lives > 0) {
                     setTimeout(() => {
                         respawnPlayer();
-                    }, 1000);
+                    }, 300); // Reduced from 1000ms for smoother respawn
                 } else {
                     setTimeout(async () => {
                         const playAgain = await showCustomModal('💀 ELIMINATED!', `Total Kills: ${totalKills}\nTime: ${Math.floor(gameTime/60)}:${(gameTime%60).toString().padStart(2,'0')}\n\nPlay again for 1 SGB?`, [{text: 'Pay & Play'}, {text: 'Exit'}]);
                         if (playAgain) {
                             lives = 5;
+                            document.getElementById('livesCount').textContent = lives;
                             totalKills = 0;
                             document.getElementById('gameArea').style.display = 'none';
                             document.getElementById('gameSetup').style.display = 'block';
                         } else {
                             lives = 5;
+                            document.getElementById('livesCount').textContent = lives;
                             totalKills = 0;
                             document.getElementById('gameArea').style.display = 'none';
                             document.getElementById('gameSetup').style.display = 'block';
