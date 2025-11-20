@@ -4,7 +4,2472 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAKE Arena - Play to Earn</title>
+    <style><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAKE Arena - Play to Earn</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Arial Black', Arial, sans-serif;
+            color: white;
+            padding: 20px;
+        }
+        
+        @keyframes glow { 
+            0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.5); } 
+            50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.8); } 
+        }
+        
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.05); } 
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: rgba(15, 23, 42, 0.98);
+            border-radius: 16px;
+            border: 2px solid #334155;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px 20px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-bottom: 2px solid #334155;
+        }
+        
+        .header h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .header .tagline {
+            color: #fbbf24;
+            font-size: clamp(14px, 2vw, 16px);
+        }
+        
+        .fomo-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            border-bottom: 2px solid #10b981;
+            padding: 15px 20px;
+        }
+        
+        .fomo-content {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .fomo-stat {
+            text-align: center;
+        }
+        
+        .fomo-value {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: bold;
+            color: #10b981;
+        }
+        
+        .fomo-label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+        
+        .price-ticker {
+            font-size: clamp(18px, 2.5vw, 24px);
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        
+        .tabs {
+            display: flex;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom: 2px solid #334155;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: clamp(12px, 1.5vw, 16px);
+            font-weight: bold;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #fff;
+        }
+        
+        .tab.active {
+            color: #38bdf8;
+            border-bottom: 3px solid #38bdf8;
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        .tab.marketplace-tab {
+            background: linear-gradient(90deg, 
+                rgba(236, 72, 153, 0.6), 
+                rgba(168, 85, 247, 0.6),
+                rgba(59, 130, 246, 0.6),
+                rgba(236, 72, 153, 0.6)
+            );
+            background-size: 200% 200%;
+            animation: rainbow 4s linear infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab.marketplace-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        .tab.marketplace-tab .sparkle {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 20px;
+            animation: pulse 1s infinite;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .wallet-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .wallet-connected {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            background: #0a0e1a;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        #gameCanvas {
+            width: 100%;
+            height: 600px;
+            display: block;
+            background: #0a0e1a;
+        }
+        
+        .game-hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        
+        .hud-left, .hud-right {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #334155;
+        }
+        
+        .hud-stat {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .sarah-message {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(236, 72, 153, 0.95);
+            padding: 15px 30px;
+            border-radius: 12px;
+            border: 2px solid #ec4899;
+            font-size: 25px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            max-width: 80%;
+            text-align: center;
+        }
+        
+        .leaderboard {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid #334155;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+        }
+        
+        .leaderboard-entry.top {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
+            border: 1px solid #fbbf24;
+        }
+    </style>
+    <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 BAKE ARENA</h1>
+            <div class="tagline">💰 Play • Earn • Dominate</div>
+        </div>
+        
+        <!-- Wallet Banner -->
+        <div id="walletBanner" class="fomo-banner" style="display: none;">
+            <div class="fomo-content">
+                <div class="fomo-stat">
+                    <div style="color: #3b82f6; font-size: 16px; font-weight: bold;"><span id="walletAddrBanner"></span></div>
+                    <div class="fomo-label">Wallet</div>
+                </div>
+                <div class="fomo-stat">
+                    <div class="fomo-value" style="color: #fbbf24;"><span id="walletBalBanner">0</span></div>
+                    <div class="fomo-label">Your BAKE</div>
+                </div>
+                <div class="fomo-stat">
+                    <div class="fomo-value" style="color: #22c55e;"><span id="walletSGBBanner">0</span></div>
+                    <div class="fomo-label">Your SGB</div>
+                </div>
+                <div class="fomo-stat">
+                    <div class="fomo-value" style="color: #8b5cf6;"><span id="marketcapBanner">$0</span></div>
+                    <div class="fomo-label">BAKE MCAP</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LP Stats Banner -->
+        <div id="lpBanner" class="fomo-banner">
+            <div class="fomo-content">
+                <div style="font-size: 18px; font-weight: bold; color: #10b981;">BAKE LP STATS</div>
+                <div class="fomo-stat">
+                    <div class="price-ticker">$<span id="bakePriceUSD">0.000084</span></div>
+                    <div class="fomo-label">BAKE Price</div>
+                </div>
+                <div class="fomo-stat">
+                    <div class="fomo-value" style="color: #8b5cf6;">$<span id="marketcapLP">0</span></div>
+                    <div class="fomo-label">Market Cap</div>
+                </div>
+                <div class="fomo-stat">
+                    <div class="fomo-value" style="color: #22c55e;"><span id="priceChangePercent">+0.00</span>%</div>
+                    <div class="fomo-label">24h Change</div>
+                </div>
+                <div class="fomo-stat">
+                    <div class="fomo-value">$<span id="liquidityValue">324</span></div>
+                    <div class="fomo-label">Liquidity</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('play')">🎮 PLAY</button>
+            <button class="tab" onclick="switchTab('buy')">💰 BUY BAKE</button>
+            <button class="tab" onclick="switchTab('pool')">💧 POOL</button>
+            <button class="tab" onclick="switchTab('leaderboard')">🏆 LEADERBOARD</button>
+            <button class="tab marketplace-tab" onclick="switchTab('marketplace')">
+                ✨ MARKETPLACE
+                <span class="sparkle">✨</span>
+            </button>
+        </div>
+        
+        <!-- PLAY TAB -->
+        <div id="playTab" class="tab-content active">
+            <div style="text-align: center; margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button id="walletBtn" class="wallet-btn" onclick="connectWallet()">
+                    🔗 Connect Wallet
+                </button>
+                <button id="importTokenBtn" class="wallet-btn" onclick="importBAKEToken()" style="background: linear-gradient(135deg, #10b981, #059669); display: none;">
+                    ➕ Add $BAKE to Metamask
+                </button>
+            </div>
+            
+            <div id="gameSetup" style="display: none;">
+                <div style="background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                    <h3 style="color: #10b981; margin-bottom: 15px;">🎟️ ENTRY FEE: 1 SGB</h3>
+                    <input type="text" id="username" placeholder="ENTER USERNAME" maxlength="8" style="width: 300px; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; text-align: center; font-size: 18px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">
+                    <button id="payEntryBtn" class="wallet-btn" onclick="selectVehicle()" style="background: linear-gradient(135deg, #10b981, #059669); display: block; margin: 0 auto;">💸 PAY 1 SGB & CHOOSE VEHICLE</button>
+                </div>
+            </div>
+            
+            <div id="vehicleSelect" style="display: none;">
+                <h3 style="text-align: center; color: #38bdf8; margin-bottom: 15px;">CHOOSE YOUR VEHICLE</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div onclick="selectVehicleType('🚜', 230, 40)" style="background: #1e293b; border: 2px solid #334155; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
+                        <div style="font-size: 48px;">🚜</div>
+                        <div style="font-weight: bold; margin: 10px 0;">Tank</div>
+                        <div style="font-size: 11px; color: #94a3b8;">HP: 230 • DMG: 40</div>
+                    </div>
+                    <div onclick="selectVehicleType('🏎️', 92, 20)" style="background: #1e293b; border: 2px solid #334155; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
+                        <div style="font-size: 48px;">🏎️</div>
+                        <div style="font-weight: bold; margin: 10px 0;">Sports Car</div>
+                        <div style="font-size: 11px; color: #94a3b8;">HP: 92 • DMG: 20</div>
+                    </div>
+                    <div onclick="selectVehicleType('🚚', 161, 30)" style="background: #1e293b; border: 2px solid #334155; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s;">
+                        <div style="font-size: 48px;">🚚</div>
+                        <div style="font-weight: bold; margin: 10px 0;">Truck</div>
+                        <div style="font-size: 11px; color: #94a3b8;">HP: 161 • DMG: 30</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Marketplace Upsell Screen -->
+            <div id="marketplaceUpsell" style="display: none;">
+                <h3 style="text-align: center; color: #ec4899; margin-bottom: 20px;">⚡ NEED ANYTHING FROM THE MARKETPLACE?</h3>
+                <p style="text-align: center; color: #94a3b8; margin-bottom: 25px;">Gear up before battle! Get tacticals, skins, and power-ups.</p>
+                
+                <div id="upsellItems" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px;"></div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="wallet-btn" onclick="switchTab('marketplace')" style="background: linear-gradient(135deg, #ec4899, #d946ef);">🛒 Browse Marketplace</button>
+                    <button class="wallet-btn" onclick="proceedToGame()" style="background: linear-gradient(135deg, #10b981, #059669);">▶️ Continue to Game</button>
+                </div>
+            </div>
+            
+            <div id="gameArea" style="display: none;">
+                <div id="gameContainer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0a0e1a; z-index: 9999;">
+                    <canvas id="gameCanvas" style="width: 100%; height: 100%;"></canvas>
+                    
+                    <!-- Floating Pot Display -->
+                    <div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, rgba(251, 191, 36, 0.95), rgba(245, 158, 11, 0.95)); padding: 20px 40px; border-radius: 16px; border: 3px solid #fbbf24; box-shadow: 0 8px 32px rgba(251, 191, 36, 0.4);">
+                        <div style="font-size: 14px; color: #78350f; text-align: center; margin-bottom: 5px;">💰 PRIZE POT</div>
+                        <div style="font-size: 36px; font-weight: bold; color: #ffffff; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"><span id="currentPot">10000</span> BAKE</div>
+                    </div>
+                    
+                    <!-- Kill Notifications -->
+                    <div id="killNotif" style="position: absolute; top: 120px; left: 50%; transform: translateX(-50%); display: none; background: linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(22, 163, 74, 0.95)); padding: 15px 30px; border-radius: 12px; border: 2px solid #22c55e; font-size: 24px; font-weight: bold; animation: pulse 0.5s;"></div>
+                    
+                    <!-- Player Stats (Top Left) -->
+                    <div style="position: absolute; top: 20px; left: 20px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 12px; border: 2px solid #334155;">
+                        <div style="font-size: 18px; margin: 5px 0; color: #ef4444;">❤️ <span id="playerHP">100</span>/<span id="playerMaxHP">100</span></div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #10b981;">💚 Lives: <span id="livesCount">5</span>/5</div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #fbbf24;">🍰 <span id="playerBAKE">0</span> BAKE</div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #22c55e;">🏆 <span id="killCount">0</span> kills</div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #ec4899;">🔥 <span id="streakCount">0</span>x streak</div>
+                        <div id="tacticalsDisplay" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155;"></div>
+                    </div>
+                    
+                    <!-- Game Info (Top Right) -->
+                    <div style="position: absolute; top: 20px; right: 20px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-radius: 12px; border: 2px solid #334155; text-align: right;">
+                        <div style="font-size: 18px; margin: 5px 0; color: #38bdf8;">🎮 <span id="playerName">Player</span></div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #a855f7;">👥 <span id="aliveCount">8</span> alive</div>
+                        <div style="font-size: 18px; margin: 5px 0; color: #fbbf24;">⏱️ <span id="gameTime">0:00</span></div>
+                    </div>
+                    
+                    <!-- Sarah Dialogue Box (Always Visible) -->
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; width: 100%; background: linear-gradient(135deg, rgba(236, 72, 153, 0.98), rgba(219, 39, 119, 0.98)); padding: 30px 40px; border-top: 4px solid #ec4899; box-shadow: 0 -8px 32px rgba(236, 72, 153, 0.8);">
+                        <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 25px;">
+                            <div style="font-size: 64px; filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.5));">💁‍♀️</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 18px; font-weight: bold; color: #fce7f3; margin-bottom: 8px; letter-spacing: 2px;">SARAH</div>
+                                <div id="sarahText" style="font-size: 32px; color: #ffffff; line-height: 1.4; font-weight: 600; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Good luck out there! 💕</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- BUY BAKE TAB -->
+        <div id="buyTab" class="tab-content">
+            <h2 style="color: #fbbf24; margin-bottom: 20px; text-align: center;">💰 Buy BAKE Packages</h2>
+            
+            <div id="buyWalletWarning" style="background: rgba(239,68,68,0.2); border: 2px solid #ef4444; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                <div style="color: white; font-size: 18px; font-weight: bold; margin-bottom: 10px;">⚠️ CONNECT WALLET TO PURCHASE</div>
+                <button class="wallet-btn" onclick="connectWallet(); switchTab('play');">🔗 Connect Wallet</button>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                <div onclick="buyPackage(10000, 260)" style="background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid #334155; padding: 20px; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s;">
+                    <div style="font-size: 28px; font-weight: bold; color: #fbbf24;">10,000</div>
+                    <div style="font-size: 12px; color: #94a3b8; margin: 5px 0;">BAKE</div>
+                    <div style="font-size: 18px; color: #fff; margin-top: 10px;">260 SGB</div>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 5px;">≈ $0.52</div>
+                </div>
+                
+                <div onclick="buyPackage(50000, 1170)" style="background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid #fbbf24; padding: 20px; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s; position: relative;">
+                    <div style="position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold;">POPULAR</div>
+                    <div style="font-size: 28px; font-weight: bold; color: #fbbf24;">50,000</div>
+                    <div style="font-size: 12px; color: #94a3b8; margin: 5px 0;">BAKE</div>
+                    <div style="font-size: 18px; color: #fff; margin-top: 10px;">1,170 SGB</div>
+                    <div style="font-size: 10px; color: #22c55e; margin-top: 5px;">≈ $2.34 (Save 10%)</div>
+                </div>
+                
+                <div onclick="buyPackage(100000, 2080)" style="background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid #334155; padding: 20px; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s;">
+                    <div style="font-size: 28px; font-weight: bold; color: #fbbf24;">100,000</div>
+                    <div style="font-size: 12px; color: #94a3b8; margin: 5px 0;">BAKE</div>
+                    <div style="font-size: 18px; color: #fff; margin-top: 10px;">2,080 SGB</div>
+                    <div style="font-size: 10px; color: #22c55e; margin-top: 5px;">≈ $4.16 (Save 20%)</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- POOL TAB -->
+        <div id="poolTab" class="tab-content">
+            <h2 style="color: #10b981; margin-bottom: 20px; text-align: center;">💧 BAKE/SGB Liquidity Pool</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;">SGB Reserves</div>
+                    <div style="font-size: 36px; font-weight: bold; color: #10b981;" id="poolWsgb">0</div>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;">BAKE Reserves</div>
+                    <div style="font-size: 36px; font-weight: bold; color: #fbbf24;" id="poolBake">0</div>
+                </div>
+            </div>
+            
+            <div style="background: rgba(251, 191, 36, 0.1); padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;">BAKE Price</div>
+                <div style="font-size: 32px; font-weight: bold; color: #fbbf24; margin-bottom: 8px;"><span id="bakePrice">0.000000</span> SGB</div>
+                <div style="font-size: 20px; font-weight: bold; color: #22c55e; margin-bottom: 12px;">Market Cap: $<span id="marketCap">0</span></div>
+                <div style="font-size: 16px; font-weight: bold;" id="allTimeChange">All-Time: +0.00%</div>
+            </div>
+            
+            <!-- Add Liquidity Section -->
+            <div style="background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h3 style="color: #10b981; margin-bottom: 15px; text-align: center;">💧 Add Liquidity</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 5px;">SGB Amount</div>
+                    <input type="number" id="wsgbInput" placeholder="0.0" style="width: 100%; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; text-align: center; margin-top: 10px;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 5px;">BAKE Required</div>
+                    <input type="number" id="bakeRequired" placeholder="0.0" readonly style="width: 100%; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; text-align: center; margin-top: 10px;">
+                </div>
+                
+                <button onclick="addLiquidity()" style="background: linear-gradient(135deg, #10b981, #059669); border: none; padding: 15px 40px; border-radius: 8px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px;">💧 ADD LIQUIDITY</button>
+            </div>
+            
+            <!-- Swap Section -->
+            <div style="background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h3 style="color: #3b82f6; margin-bottom: 15px; text-align: center;">🔄 Swap Tokens</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 5px;">From</div>
+                    <input type="number" id="swapFromAmount" placeholder="0.0" style="width: 100%; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; text-align: center;">
+                    <select id="swapFromToken" style="width: 100%; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; text-align: center; margin-top: 5px;">
+                        <option value="SGB">SGB</option>
+                        <option value="BAKE">BAKE</option>
+                    </select>
+                </div>
+                
+                <div style="text-align: center; margin: 10px 0; font-size: 24px;">⬇️</div>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 5px;">To (estimated)</div>
+                    <input type="number" id="swapToAmount" placeholder="0.0" readonly style="width: 100%; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; text-align: center;">
+                </div>
+                
+                <button onclick="executeSwap()" style="background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; padding: 15px 40px; border-radius: 8px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%;">🔄 SWAP</button>
+            </div>
+        </div>
+        
+        <!-- LEADERBOARD TAB -->
+        <div id="leaderboardTab" class="tab-content">
+            <h2 style="color: #fbbf24; margin-bottom: 20px; text-align: center;">🏆 TOP PLAYERS</h2>
+            <div class="leaderboard" id="leaderboardList"></div>
+            
+            <h2 style="color: #3b82f6; margin: 40px 0 20px 0; text-align: center;">📊 YOUR HISTORY</h2>
+            <div style="background: rgba(15, 23, 42, 0.8); border: 2px solid #334155; border-radius: 12px; padding: 20px; overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; color: white;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #334155;">
+                            <th style="padding: 12px; text-align: left; color: #94a3b8;">Date</th>
+                            <th style="padding: 12px; text-align: left; color: #94a3b8;">Action</th>
+                            <th style="padding: 12px; text-align: right; color: #94a3b8;">Amount</th>
+                            <th style="padding: 12px; text-align: center; color: #94a3b8;">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="4" style="padding: 20px; text-align: center; color: #64748b;">No history yet. Play games to see your activity!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- MARKETPLACE TAB -->
+        <div id="marketplaceTab" class="tab-content">
+            <h2 style="color: #ec4899; margin-bottom: 20px; text-align: center;">✨ BAKE Marketplace</h2>
+            
+            <div id="marketplaceWalletWarning" style="background: rgba(239,68,68,0.2); border: 2px solid #ef4444; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                <div style="color: white; font-size: 18px; font-weight: bold; margin-bottom: 10px;">⚠️ CONNECT WALLET TO SHOP</div>
+                <button class="wallet-btn" onclick="connectWallet();">🔗 Connect Wallet</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <div onclick="showCategory('tacticals')" style="background: rgba(30, 41, 59, 0.8); border: 2px solid #334155; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.3s;" class="category-tab-btn">⚔️ Tacticals</div>
+                <div onclick="showCategory('skins')" style="background: rgba(30, 41, 59, 0.8); border: 2px solid #334155; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.3s;" class="category-tab-btn">🎨 Skins</div>
+                <div onclick="showCategory('trails')" style="background: rgba(30, 41, 59, 0.8); border: 2px solid #334155; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.3s;" class="category-tab-btn">✨ Trails</div>
+                <div onclick="showCategory('effects')" style="background: rgba(30, 41, 59, 0.8); border: 2px solid #334155; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.3s;" class="category-tab-btn">💥 Death FX</div>
+            </div>
+            
+            <div id="marketplaceItems" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // BLOCKCHAIN CONFIGURATION
+        const SONGBIRD_CHAIN_ID = '0x13'; // 19 in hex
+        const SONGBIRD_RPC = 'https://songbird-api.flare.network/ext/C/rpc';
+        
+        const CONTRACTS = {
+            BAKE_TOKEN: '0xBA3a30FFd8a8a18C90b275FC7fE2F8EFd77F30Ce',
+            GAME_CONTRACT: '0xaB27737d60ce0FaC521f82e3d2703d0D1c279E49',
+            POOL_CONTRACT: '0xF840c1F971eE06387cB76817F1c3570f9f644f6A'
+        };
+        
+        // Contract ABIs
+        const ERC20_ABI = [
+            "function balanceOf(address) view returns (uint256)",
+            "function transfer(address to, uint256 amount) returns (bool)",
+            "function approve(address spender, uint256 amount) returns (bool)",
+            "function allowance(address owner, address spender) view returns (uint256)"
+        ];
+        
+        const POOL_ABI = [
+            "function swapSGBForBAKE() payable returns (uint256)",
+            "function swapBAKEForSGB(uint256 bakeAmount) returns (uint256)",
+            "function addLiquidity(uint256 bakeAmount) payable",
+            "function getBAKEPrice() view returns (uint256)",
+            "function wsgbReserves() view returns (uint256)",
+            "function bakeReserves() view returns (uint256)"
+        ];
+        
+        // GAME STATE
+        let wallet = null;
+        let balance = 100000;
+        let sgbBalance = 1000;
+        
+        // History tracking
+        let userHistory = JSON.parse(localStorage.getItem('bakeHistory') || '[]');
+        let leaderboard = JSON.parse(localStorage.getItem('bakeLeaderboard') || '[]');
+        
+        function addHistoryEntry(action, amount, type) {
+            const entry = {
+                date: new Date().toISOString(),
+                action: action,
+                amount: amount,
+                type: type // 'earn', 'spend', 'burn', 'lp'
+            };
+            userHistory.unshift(entry); // Add to beginning
+            if (userHistory.length > 100) userHistory = userHistory.slice(0, 100); // Keep last 100
+            localStorage.setItem('bakeHistory', JSON.stringify(userHistory));
+            updateHistoryTable();
+        }
+        
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            if (userHistory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding: 20px; text-align: center; color: #64748b;">No history yet. Play games to see your activity!</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = userHistory.map(entry => {
+                const date = new Date(entry.date);
+                const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                let typeColor = '#94a3b8';
+                let typeLabel = entry.type.toUpperCase();
+                if (entry.type === 'earn') { typeColor = '#10b981'; typeLabel = '📈 EARN'; }
+                else if (entry.type === 'spend') { typeColor = '#fbbf24'; typeLabel = '💸 SPEND'; }
+                else if (entry.type === 'burn') { typeColor = '#ef4444'; typeLabel = '🔥 BURN'; }
+                else if (entry.type === 'lp') { typeColor = '#3b82f6'; typeLabel = '💧 LP'; }
+                
+                return `
+                    <tr style="border-bottom: 1px solid #334155;">
+                        <td style="padding: 12px; color: #94a3b8; font-size: 13px;">${dateStr}</td>
+                        <td style="padding: 12px; color: white;">${entry.action}</td>
+                        <td style="padding: 12px; text-align: right; color: white; font-weight: bold;">${entry.amount.toLocaleString()} BAKE</td>
+                        <td style="padding: 12px; text-align: center; color: ${typeColor}; font-weight: bold; font-size: 12px;">${typeLabel}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function updateLeaderboardDisplay() {
+            const list = document.getElementById('leaderboardList');
+            if (leaderboard.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">No games played yet. Be the first!</div>';
+                return;
+            }
+            
+            list.innerHTML = leaderboard.slice(0, 10).map((entry, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+                const date = new Date(entry.date);
+                const dateStr = date.toLocaleDateString();
+                
+                return `
+                    <div class="leaderboard-entry">
+                        <span style="font-size: 24px; min-width: 50px; display: inline-block;">${medal}</span>
+                        <span style="flex: 1; font-weight: bold;">${entry.name}</span>
+                        <span style="color: #fbbf24; font-weight: bold;">${entry.bake.toLocaleString()} BAKE</span>
+                        <span style="color: #94a3b8; font-size: 13px; margin-left: 15px;">${entry.kills} kills</span>
+                        <span style="color: #64748b; font-size: 12px; margin-left: 10px;">${dateStr}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        let username = '';
+        let canvas, ctx, gameLoop;
+        let player, enemies = [], bullets = [], walls = [], pickups = [], activeTurrets = [];
+        let keys = {}, mouse = { x: 0, y: 0, clicked: false };
+        let pot = 10000, kills = 0, streak = 0, aliveCount = 8;
+        let gameTime = 0, gameStartTime = 0;
+        let lives = 5;
+        let totalKills = 0;
+        
+        // Web3 variables
+        let provider, signer, bakeContract, poolContract;
+        
+        // LEADERBOARD DATA
+        let leaderboard = [
+            { name: 'CRYPTO$', wins: 47, bake: 2847000 },
+            { name: 'HODLER', wins: 39, bake: 2103000 },
+            { name: 'WHALE', wins: 35, bake: 1890000 },
+            { name: 'SARAH', wins: 31, bake: 1674000 },
+            { name: 'DEGEN', wins: 28, bake: 1512000 },
+            { name: 'MOON', wins: 24, bake: 1296000 },
+            { name: 'STACK', wins: 19, bake: 1026000 },
+            { name: 'GEMS', wins: 15, bake: 810000 }
+        ];
+        
+        // MARKETPLACE INVENTORY
+        const MARKETPLACE = {
+            skins: [
+                { id: 'gold', name: 'Golden Warrior', rarity: 'legendary', price: 50000, icon: '🏆', color: '#fbbf24', desc: 'Shine like a champion' },
+                { id: 'chrome', name: 'Chrome Crusader', rarity: 'epic', price: 35000, icon: '💎', color: '#e5e7eb', desc: 'Reflective perfection' },
+                { id: 'neon', name: 'Neon Racer', rarity: 'epic', price: 40000, icon: '🌟', color: '#a855f7', desc: 'Glow in the dark' },
+                { id: 'camo', name: 'Digital Camo', rarity: 'rare', price: 25000, icon: '🎯', color: '#65a30d', desc: 'Tactical stealth' },
+                { id: 'fire', name: 'Flame Decal', rarity: 'rare', price: 30000, icon: '🔥', color: '#f97316', desc: 'Leave a trail of fire' },
+                { id: 'ice', name: 'Ice King', rarity: 'rare', price: 30000, icon: '❄️', color: '#06b6d4', desc: 'Cool under pressure' }
+            ],
+            trails: [
+                { id: 'rainbow', name: 'Rainbow Trail', rarity: 'epic', price: 40000, icon: '🌈', desc: 'Taste the rainbow' },
+                { id: 'lightning', name: 'Lightning Bolt', rarity: 'epic', price: 35000, icon: '⚡', desc: 'Electric shock' },
+                { id: 'fire', name: 'Flame Trail', rarity: 'rare', price: 25000, icon: '🔥', desc: 'Hot shots' },
+                { id: 'toxic', name: 'Toxic Waste', rarity: 'rare', price: 25000, icon: '☢️', desc: 'Radioactive bullets' },
+                { id: 'hearts', name: 'Love Hearts', rarity: 'rare', price: 30000, icon: '💕', desc: 'Spread the love' },
+                { id: 'stars', name: 'Star Shower', rarity: 'rare', price: 30000, icon: '⭐', desc: 'Wish upon a bullet' }
+            ],
+            effects: [
+                { id: 'confetti', name: 'Confetti Burst', rarity: 'rare', price: 30000, icon: '🎉', desc: 'Party on death' },
+                { id: 'nuclear', name: 'Nuclear Meltdown', rarity: 'epic', price: 50000, icon: '☢️', desc: 'Atomic explosion' },
+                { id: 'fireworks', name: 'Fireworks Show', rarity: 'epic', price: 40000, icon: '🎆', desc: 'Grand finale' },
+                { id: 'blackhole', name: 'Black Hole', rarity: 'legendary', price: 60000, icon: '🌀', desc: 'Suck everything in' },
+                { id: 'angel', name: 'Ascension', rarity: 'rare', price: 35000, icon: '👼', desc: 'Rise to heaven' },
+                { id: 'cartoon', name: 'Cartoon Poof', rarity: 'rare', price: 25000, icon: '💭', desc: 'Looney Tunes style' }
+            ],
+            tacticals: [
+                { id: 'orbital', name: 'Orbital Laser', rarity: 'legendary', price: 150000, icon: '🛸', desc: 'Space laser follows cursor for 5s (180s cooldown)' },
+                { id: 'timeslow', name: 'Time Distortion', rarity: 'legendary', price: 120000, icon: '⏱️', desc: 'Bullet time for 8s (150s cooldown)' },
+                { id: 'turret', name: 'Auto Turret', rarity: 'legendary', price: 80000, icon: '🔫', desc: 'Deploy turret that shoots enemies (60s cooldown)' },
+                { id: 'airstrike', name: 'Airstrike', rarity: 'legendary', price: 100000, icon: '✈️', desc: 'Call in explosions at cursor (120s cooldown)' },
+                { id: 'shield', name: 'Shield Dome', rarity: 'epic', price: 70000, icon: '🛡️', desc: 'Blocks bullets for 10s (90s cooldown)' },
+                { id: 'emp', name: 'EMP Mine', rarity: 'epic', price: 60000, icon: '💣', desc: 'Slows enemies in radius (45s cooldown)' },
+                { id: 'heal', name: 'Heal Station', rarity: 'rare', price: 50000, icon: '❤️', desc: 'Restores HP over time (60s cooldown)' },
+                { id: 'decoy', name: 'Decoy Vehicle', rarity: 'rare', price: 40000, icon: '�ghost', desc: 'Fake target distracts enemies (30s cooldown)' }
+            ]
+        };
+        
+        let inventory = {
+            skins: [],
+            trails: [],
+            effects: [],
+            tacticals: []
+        };
+        
+        // SARAH MESSAGES
+        const sarahMessages = {
+            start: "Good luck out there! 💕",
+            kill1: "Nice shot... I mean, really nice 🎯",
+            kill3: "You're making me feel things I shouldn't 🔥",
+            kill5: "God, watching you dominate like this... 😳💦",
+            kill8: "My husband never handles his weapon like that 🍆",
+            kill10: "I need to see you after this match. Alone. 💋",
+            kill15: "Fuck it, I'm leaving him. You're all I think about 💍❌",
+            kill20: "Take me right here, right now. I don't care who's watching 🥵🔞",
+            lowHP: "Baby no! Stay alive for me! ❤️‍🔥",
+            lastStanding: "Finish them so you can finish me 💦",
+            victory: "That was SO fucking hot. My place? 🏠🔥",
+            pickup_health: "Mmm, getting harder for me? 💚",
+            pickup_damage: "Yes... bigger is better 💥😏",
+            pickup_speed: "Faster baby, faster! ⚡💨",
+            pickup_shield: "Protect yourself... so you can wreck me later 🛡️💕"
+        };
+        
+        function showSarahMessage(type) {
+            const msg = sarahMessages[type];
+            if (!msg) return;
+            
+            const el = document.getElementById('sarahText');
+            el.textContent = msg;
+        }
+        
+        async function connectWallet() {
+            const walletBtn = document.getElementById('walletBtn');
+            const originalText = walletBtn ? walletBtn.innerHTML : '';
+            
+            try {
+                // Show loading state
+                if (walletBtn) {
+                    walletBtn.disabled = true;
+                    walletBtn.innerHTML = '⏳ Opening MetaMask...';
+                    walletBtn.style.opacity = '0.7';
+                    walletBtn.style.cursor = 'not-allowed';
+                }
+                
+                console.log("Connecting...");
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                signer = provider.getSigner();
+                
+                const BAKE_ABI = [
+                    "function balanceOf(address) view returns (uint256)",
+                    "function transfer(address to, uint256 amount) returns (bool)",
+                    "function approve(address spender, uint256 amount) returns (bool)",
+                    "function allowance(address owner, address spender) view returns (uint256)"
+                ];
+                
+                const POOL_ABI = [
+                    "function swapC2FLRforOOPS() payable returns (uint256)",
+                    "function addLiquidity(uint256 oopsAmount) payable",
+                    "function swapOOPSforC2FLR(uint256 oopsAmount) returns (uint256)",
+                    "function reserveC2FLR() view returns (uint256)",
+                    "function reserveOOPS() view returns (uint256)",
+                    "function getPrice() view returns (uint256)"
+                ];
+                
+                bakeContract = new ethers.Contract(CONTRACTS.BAKE_TOKEN, BAKE_ABI, signer);
+                poolContract = new ethers.Contract(CONTRACTS.POOL_CONTRACT, POOL_ABI, signer);
+                
+                wallet = await signer.getAddress();
+                console.log("Connected:", wallet);
+                
+                // Get balances
+                const bakeBalance = await bakeContract.balanceOf(wallet);
+                const sgbBalanceWei = await provider.getBalance(wallet);
+                
+                balance = parseFloat(ethers.utils.formatEther(bakeBalance));
+                sgbBalance = parseFloat(ethers.utils.formatEther(sgbBalanceWei));
+                
+                // Update UI
+                if (walletBtn) {
+                    walletBtn.textContent = '✓ Connected';
+                    walletBtn.className = 'wallet-btn wallet-connected';
+                    walletBtn.onclick = null;
+                    walletBtn.disabled = false;
+                    walletBtn.style.opacity = '1';
+                    walletBtn.style.cursor = 'default';
+                }
+                
+                // Show import token button
+                document.getElementById('importTokenBtn').style.display = 'inline-block';
+                
+                document.getElementById('lpBanner').style.display = 'none';
+                document.getElementById('walletBanner').style.display = 'block';
+                
+                document.getElementById('walletAddrBanner').textContent = wallet.substr(0, 6) + '...' + wallet.substr(-4);
+                document.getElementById('walletBalBanner').textContent = Math.floor(balance).toLocaleString();
+                document.getElementById('walletSGBBanner').textContent = sgbBalance.toFixed(2);
+                
+                document.getElementById('gameSetup').style.display = 'block';
+                document.getElementById('buyWalletWarning').style.display = 'none';
+                document.getElementById('marketplaceWalletWarning').style.display = 'none';
+                
+                // Load pool data
+                await updatePoolData();
+                
+            } catch (error) {
+                console.error("Connection error:", error);
+                showCustomModal('❌ Connection Failed', error.message);
+                
+                // Reset button on error
+                if (walletBtn && originalText) {
+                    walletBtn.disabled = false;
+                    walletBtn.innerHTML = originalText;
+                    walletBtn.style.opacity = '1';
+                    walletBtn.style.cursor = 'pointer';
+                }
+            }
+        }
+        
+        async function importBAKEToken() {
+            try {
+                const wasAdded = await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: CONTRACTS.BAKE_TOKEN,
+                            symbol: 'BAKE',
+                            decimals: 18,
+                            image: 'https://i.imgur.com/cake-icon.png', // You can replace with actual icon URL
+                        },
+                    },
+                });
+                
+                if (wasAdded) {
+                    showCustomModal('✅ Success', 'BAKE token added to MetaMask!');
+                }
+            } catch (error) {
+                console.error('Error adding token:', error);
+                showCustomModal('❌ Error', 'Failed to add token: ' + error.message);
+            }
+        }
+        
+        async function updatePoolData() {
+            try {
+                const c2flrReserve = await poolContract.reserveC2FLR();
+                const bakeReserve = await poolContract.reserveOOPS();
+                
+                const wsgbAmount = parseFloat(ethers.utils.formatEther(c2flrReserve));
+                const bakeAmount = parseFloat(ethers.utils.formatEther(bakeReserve));
+                
+                document.getElementById('poolWsgb').textContent = wsgbAmount.toFixed(2);
+                document.getElementById('poolBake').textContent = Math.floor(bakeAmount).toLocaleString();
+                
+                if (wsgbAmount > 0 && bakeAmount > 0) {
+                    const price = wsgbAmount / bakeAmount;
+                    document.getElementById('bakePrice').textContent = price.toFixed(6);
+                    
+                    const priceUSD = price * 0.0027;
+                    document.getElementById('bakePriceUSD').textContent = priceUSD.toFixed(6);
+                    
+                    const marketCap = priceUSD * 11900000000;
+                    document.getElementById('marketCap').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                    
+                    // Update marketcap in wallet banner
+                    document.getElementById('marketcapBanner').textContent = '$' + marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                    
+                    // Update marketcap in LP banner
+                    document.getElementById('marketcapLP').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                    
+                    // Calculate all-time % change (starting from $100 market cap = 0.000003112356 SGB initial price)
+                    const initialPrice = 0.000003112356;
+                    const priceChange = ((price - initialPrice) / initialPrice) * 100;
+                    const changeEl = document.getElementById('allTimeChange');
+                    changeEl.textContent = 'All-Time: ' + (priceChange >= 0 ? '+' : '') + priceChange.toFixed(2) + '%';
+                    changeEl.style.color = priceChange >= 0 ? '#10b981' : '#ef4444';
+                } else {
+                    document.getElementById('bakePrice').textContent = '0.000000';
+                    document.getElementById('marketCap').textContent = '0';
+                    document.getElementById('marketcapBanner').textContent = '$0';
+                    document.getElementById('marketcapLP').textContent = '0';
+                    document.getElementById('allTimeChange').textContent = 'All-Time: +0.00%';
+                }
+                
+            } catch (error) {
+                console.error('Error loading pool data:', error);
+            }
+        }
+        
+        function resetEntryButton() {
+            const payBtn = document.getElementById('payEntryBtn');
+            if (payBtn) {
+                payBtn.disabled = false;
+                payBtn.innerHTML = '💸 PAY 1 SGB & CHOOSE VEHICLE';
+                payBtn.style.opacity = '1';
+                payBtn.style.cursor = 'pointer';
+            }
+        }
+        
+        async function selectVehicle() {
+            username = document.getElementById('username').value.trim().toUpperCase();
+            if (!username) {
+                showCustomModal('⚠️ Username Required', 'Please enter a username');
+                return;
+            }
+            
+            if (!wallet) {
+                showCustomModal('⚠️ Wallet Required', 'Connect your wallet first');
+                return;
+            }
+            
+            const payBtn = document.getElementById('payEntryBtn');
+            const originalText = payBtn.innerHTML;
+            
+            try {
+                const entryFee = ethers.utils.parseEther('1');
+                
+                const confirmed = await showCustomModal('💰 Entry Fee', 'Pay 1 SGB to enter?\n\nThis will be added to the prize pool.', [{text: 'Pay & Play'}, {text: 'Cancel'}]);
+                if (!confirmed) return;
+                
+                // Show loading state
+                payBtn.disabled = true;
+                payBtn.innerHTML = '⏳ Opening MetaMask...';
+                payBtn.style.opacity = '0.7';
+                payBtn.style.cursor = 'not-allowed';
+                
+                const tx = await signer.sendTransaction({
+                    to: CONTRACTS.POOL_CONTRACT,
+                    value: entryFee
+                });
+                
+                // Update to processing state
+                payBtn.innerHTML = '⏳ Processing transaction...';
+                
+                await tx.wait();
+                
+                const newSgbBalance = await provider.getBalance(wallet);
+                sgbBalance = parseFloat(ethers.utils.formatEther(newSgbBalance));
+                document.getElementById('walletSGBBanner').textContent = sgbBalance.toFixed(2);
+                
+                await updatePoolData();
+                
+                document.getElementById('gameSetup').style.display = 'none';
+                document.getElementById('vehicleSelect').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Entry fee error:', error);
+                showCustomModal('❌ Transaction Failed', error.message);
+                
+                // Reset button on error
+                payBtn.disabled = false;
+                payBtn.innerHTML = originalText;
+                payBtn.style.opacity = '1';
+                payBtn.style.cursor = 'pointer';
+            }
+        }
+        
+        let selectedVehicle = null;
+        
+        function selectVehicleType(icon, hp, dmg) {
+            selectedVehicle = { icon, hp, dmg };
+            document.getElementById('vehicleSelect').style.display = 'none';
+            document.getElementById('marketplaceUpsell').style.display = 'block';
+            
+            // Show featured items (tacticals mainly)
+            showUpsellItems();
+        }
+        
+        function showUpsellItems() {
+            const container = document.getElementById('upsellItems');
+            const featured = [
+                marketplaceItems.tacticals[0], // Orbital
+                marketplaceItems.tacticals[3], // Airstrike
+                marketplaceItems.tacticals[4], // Shield
+                marketplaceItems.tacticals[6], // Heal
+            ];
+            
+            container.innerHTML = featured.map(item => {
+                const owned = inventory.tacticals.includes(item.id);
+                return `
+                    <div style="background: rgba(30, 41, 59, 0.8); border: 2px solid ${owned ? '#10b981' : '#334155'}; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 36px; margin-bottom: 8px;">${item.icon}</div>
+                        <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: white;">${item.name}</div>
+                        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 8px;">${item.desc}</div>
+                        <div style="font-weight: bold; color: #fbbf24; margin-bottom: 8px;">${item.price.toLocaleString()} BAKE</div>
+                        ${owned ? '<div style="color: #10b981; font-size: 12px;">✓ OWNED</div>' : `<button class="wallet-btn" onclick="quickBuyItem('tacticals', '${item.id}')" style="width: 100%; padding: 8px; font-size: 12px;">Buy Now</button>`}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function quickBuyItem(category, itemId) {
+            const item = marketplaceItems[category].find(i => i.id === itemId);
+            if (!item || !wallet) return;
+            
+            if (balance < item.price) {
+                showCustomModal('⚠️ Insufficient BAKE', `You need ${item.price.toLocaleString()} BAKE`);
+                return;
+            }
+            
+            const confirmed = await showCustomModal('💰 Purchase', `Buy ${item.name} for ${item.price.toLocaleString()} BAKE?`, [{text: 'Buy'}, {text: 'Cancel'}]);
+            if (confirmed) {
+                balance -= item.price;
+                document.getElementById('walletBalBanner').textContent = Math.floor(balance).toLocaleString();
+                inventory[category].push(itemId);
+                addHistoryEntry(`Bought ${item.name}`, item.price, 'burn'); // Marketplace purchases burn BAKE
+                showCustomModal('✅ Purchase Successful!', `${item.name} is now yours!`);
+                showUpsellItems(); // Refresh display
+            }
+        }
+        
+        function proceedToGame() {
+            if (selectedVehicle) {
+                document.getElementById('marketplaceUpsell').style.display = 'none';
+                startGame(selectedVehicle.icon, selectedVehicle.hp, selectedVehicle.dmg);
+            }
+        }
+        
+        function startGame(icon, hp, dmg) {
+            document.getElementById('vehicleSelect').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            
+            canvas = document.getElementById('gameCanvas');
+            
+            // Set canvas to actual screen size with high DPI
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            
+            ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+            
+            // Store logical dimensions
+            canvas.logicalWidth = window.innerWidth;
+            canvas.logicalHeight = window.innerHeight;
+            
+            document.getElementById('playerName').textContent = username;
+            document.getElementById('playerHP').textContent = hp;
+            document.getElementById('playerMaxHP').textContent = hp;
+            
+            // Display equipped tacticals
+            updateTacticalsDisplay();
+            
+            initializeGame(icon, hp, dmg);
+            showSarahMessage('start');
+        }
+        
+        function updateTacticalsDisplay() {
+            const display = document.getElementById('tacticalsDisplay');
+            if (!inventory.tacticals || inventory.tacticals.length === 0) {
+                display.innerHTML = '<div style="font-size: 14px; color: #64748b;">No tacticals equipped</div>';
+                return;
+            }
+            
+            const tacticalNames = {
+                'orbital': '🛸 Orbital',
+                'timeslow': '⏱️ Time Slow',
+                'turret': '🔫 Turret',
+                'airstrike': '✈️ Airstrike',
+                'shield': '🛡️ Shield',
+                'emp': '💣 EMP',
+                'heal': '❤️ Heal',
+                'decoy': '👻 Decoy'
+            };
+            
+            let html = '<div style="font-size: 14px; color: #a855f7; margin-bottom: 5px;">TACTICALS:</div>';
+            inventory.tacticals.slice(0, 4).forEach((tactical, i) => {
+                const name = tacticalNames[tactical] || tactical;
+                html += `<div style="font-size: 14px; color: #94a3b8; margin: 3px 0;">[${i+1}] ${name}</div>`;
+            });
+            display.innerHTML = html;
+        }
+        
+        function initializeGame(icon, hp, dmg) {
+            const w = canvas.logicalWidth;
+            const h = canvas.logicalHeight;
+            
+            // Create random asymmetrical walls
+            walls = [
+                { x: 150, y: 100, width: 120, height: 25 },
+                { x: w - 280, y: 180, width: 90, height: 30 },
+                { x: 100, y: h - 300, width: 140, height: 20 },
+                { x: w - 250, y: h - 280, width: 100, height: 35 },
+                { x: 300, y: h / 2 - 80, width: 80, height: 80 },
+                { x: w - 400, y: h / 2 + 30, width: 90, height: 60 },
+                { x: w / 2 - 150, y: 200, width: 70, height: 100 },
+                { x: w / 2 + 80, y: h - 350, width: 85, height: 70 }
+            ];
+            
+            // Create pickups
+            pickups = [
+                { x: 200, y: 200, type: 'health', icon: '💚', active: true },
+                { x: w - 200, y: 200, type: 'damage', icon: '💥', active: true },
+                { x: 200, y: h - 300, type: 'speed', icon: '⚡', active: true },
+                { x: w - 200, y: h - 300, type: 'shield', icon: '🛡️', active: true },
+                { x: w / 2, y: 150, type: 'health', icon: '💚', active: true },
+                { x: w / 2, y: h - 250, type: 'damage', icon: '💥', active: true }
+            ];
+            
+            player = {
+                x: w / 2,
+                y: h / 2,
+                vx: 0,
+                vy: 0,
+                angle: 0,
+                hp: hp,
+                maxHp: hp,
+                damage: dmg,
+                baseDamage: dmg,
+                size: 25,
+                icon: icon,
+                speed: 4,
+                baseSpeed: 4,
+                shield: false,
+                shieldTime: 0,
+                tacticalCooldowns: [0, 0, 0, 0] // Track cooldown for 4 tactical slots
+            };
+            
+            enemies = [];
+            const enemyNames = ['BOT_ALPHA', 'BOT_BETA', 'BOT_GAMMA', 'BOT_DELTA', 'BOT_OMEGA', 'BOT_SIGMA', 'BOT_THETA'];
+            for (let i = 0; i < 7; i++) {
+                spawnEnemy(enemyNames[i]);
+            }
+            
+            bullets = [];
+            keys = {};
+            kills = 0;
+            streak = 0;
+            pot = 10000;
+            aliveCount = 8;
+            gameStartTime = Date.now();
+            
+            // Set initial BAKE display
+            document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+            
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+            window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+            
+            gameLoop = setInterval(update, 1000/60);
+        }
+        
+        function spawnEnemy(name) {
+            const w = canvas.logicalWidth;
+            const h = canvas.logicalHeight;
+            const edge = Math.floor(Math.random() * 4);
+            let x, y;
+            
+            if (edge === 0) { x = Math.random() * w; y = -40; }
+            else if (edge === 1) { x = w + 40; y = Math.random() * h; }
+            else if (edge === 2) { x = Math.random() * w; y = h + 40; }
+            else { x = -40; y = Math.random() * h; }
+            
+            const hpVal = 120 + Math.random() * 150;
+            
+            // Random color for enemy
+            const colors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Varied rectangle dimensions for different vehicle types
+            const vehicleTypes = [
+                { width: 30, height: 20 }, // Wide vehicle
+                { width: 20, height: 30 }, // Tall vehicle
+                { width: 25, height: 25 }, // Square vehicle
+                { width: 35, height: 18 }, // Long vehicle
+                { width: 22, height: 28 }  // Compact vehicle
+            ];
+            const vehicle = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
+            
+            enemies.push({
+                x: x,
+                y: y,
+                vx: 0,
+                vy: 0,
+                hp: hpVal,
+                maxHp: hpVal,
+                damage: 20 + Math.random() * 20,
+                size: 25,
+                width: vehicle.width,
+                height: vehicle.height,
+                name: name,
+                color: color,
+                speed: 1.5 + Math.random(),
+                shootCooldown: Math.random() * 60,
+                lives: 5
+            });
+        }
+        
+        function handleMouseMove(e) {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = (e.clientX - rect.left) * (canvas.logicalWidth / rect.width);
+            mouse.y = (e.clientY - rect.top) * (canvas.logicalHeight / rect.height);
+        }
+        
+        function handleMouseDown() {
+            mouse.clicked = true;
+        }
+        
+        function handleMouseUp() {
+            mouse.clicked = false;
+        }
+        
+        function shoot() {
+            const dx = mouse.x - player.x;
+            const dy = mouse.y - player.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            if (dist > 0) {
+                bullets.push({
+                    x: player.x,
+                    y: player.y,
+                    vx: (dx/dist) * 12,
+                    vy: (dy/dist) * 12,
+                    damage: player.damage,
+                    isPlayer: true,
+                    size: 5
+                });
+            }
+        }
+        
+        function checkWallCollision(obj, newX, newY) {
+            for (let wall of walls) {
+                // Check if object's bounding box intersects with wall
+                if (newX - obj.size < wall.x + wall.width && 
+                    newX + obj.size > wall.x &&
+                    newY - obj.size < wall.y + wall.height && 
+                    newY + obj.size > wall.y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function update() {
+            // Update game time
+            gameTime = Math.floor((Date.now() - gameStartTime) / 1000);
+            const mins = Math.floor(gameTime / 60);
+            const secs = gameTime % 60;
+            document.getElementById('gameTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            // Update all tactical cooldowns
+            for (let i = 0; i < player.tacticalCooldowns.length; i++) {
+                if (player.tacticalCooldowns[i] > 0) {
+                    player.tacticalCooldowns[i]--;
+                }
+            }
+            
+            // Activate tacticals with number keys 1-4
+            for (let slot = 0; slot < 4; slot++) {
+                const key = (slot + 1).toString(); // Keys 1, 2, 3, 4
+                
+                if (keys[key] && player.tacticalCooldowns[slot] === 0 && inventory.tacticals[slot]) {
+                    const tactical = inventory.tacticals[slot];
+                    keys[key] = false; // Prevent rapid fire
+                    
+                    console.log(`Activated tactical slot ${slot}: ${tactical}`); // Debug
+                    
+                    // Apply tactical effects
+                    if (tactical === 'orbital' || tactical === 'airstrike') {
+                        // MASSIVE damage to all enemies
+                        enemies.forEach(enemy => {
+                            enemy.hp -= 300;
+                        });
+                        player.tacticalCooldowns[slot] = 600;
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `💥 ${tactical.toUpperCase()} ACTIVATED!`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                    } else if (tactical === 'shield') {
+                        player.shield = true;
+                        player.shieldTime = 600;
+                        player.tacticalCooldowns[slot] = 600;
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = '🛡️ SHIELD ACTIVE!';
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                    } else if (tactical === 'heal') {
+                        const oldHp = player.hp;
+                        player.hp = Math.min(player.maxHp, player.hp + 100);
+                        document.getElementById('playerHP').textContent = Math.floor(player.hp);
+                        player.tacticalCooldowns[slot] = 300;
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `❤️ HEALED +${Math.floor(player.hp - oldHp)} HP`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                    } else if (tactical === 'emp') {
+                        enemies.forEach(enemy => {
+                            const origSpeed = enemy.speed;
+                            enemy.speed *= 0.2; // Slow to 20%
+                            setTimeout(() => { enemy.speed = origSpeed; }, 5000);
+                        });
+                        player.tacticalCooldowns[slot] = 450;
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = '💣 EMP BLAST! ENEMIES SLOWED!';
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                    } else if (tactical === 'turret') {
+                        // Deploy visible turret away from player
+                        const turret = {
+                            x: player.x + 80,  // Spawn further away so it's visible
+                            y: player.y - 80,
+                            active: true,
+                            cooldown: 0
+                        };
+                        activeTurrets.push(turret);
+                        
+                        const turretInterval = setInterval(() => {
+                            if (!turret.active) {
+                                clearInterval(turretInterval);
+                                return;
+                            }
+                            
+                            turret.cooldown--;
+                            if (turret.cooldown <= 0) {
+                                enemies.forEach(enemy => {
+                                    const dx = enemy.x - turret.x;
+                                    const dy = enemy.y - turret.y;
+                                    const dist = Math.sqrt(dx*dx + dy*dy);
+                                    if (dist < 400) {
+                                        enemy.hp -= 20;
+                                        
+                                        // Yellow bullet from turret
+                                        bullets.push({
+                                            x: turret.x,
+                                            y: turret.y,
+                                            vx: (dx/dist) * 12,
+                                            vy: (dy/dist) * 12,
+                                            damage: 0,
+                                            isPlayer: true,
+                                            size: 5,
+                                            color: '#fbbf24' // Yellow
+                                        });
+                                    }
+                                });
+                                turret.cooldown = 30; // 0.5 second cooldown
+                            }
+                        }, 1000/60);
+                        
+                        setTimeout(() => {
+                            turret.active = false;
+                            const index = activeTurrets.indexOf(turret);
+                            if (index > -1) activeTurrets.splice(index, 1);
+                            
+                            const notif = document.getElementById('killNotif');
+                            notif.innerHTML = '🔫 TURRET EXPIRED';
+                            notif.style.display = 'block';
+                            setTimeout(() => { notif.style.display = 'none'; }, 1500);
+                        }, 10000);
+                        
+                        player.tacticalCooldowns[slot] = 600;
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = '🔫 TURRET DEPLOYED!';
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                    } else if (tactical === 'decoy') {
+                        // Create fake player that enemies target
+                        const decoy = {
+                            x: player.x + 100,
+                            y: player.y,
+                            hp: 50,
+                            isDecoy: true
+                        };
+                        // Add decoy to enemy target pool (simplified - just confuses AI briefly)
+                        player.tacticalCooldowns[slot] = 300; // 5 second cooldown
+                    } else if (tactical === 'timeslow') {
+                        // Slow down time (increase player speed, slow bullets)
+                        const origSpeed = player.speed;
+                        player.speed *= 2.5;
+                        setTimeout(() => { 
+                            player.speed = origSpeed;
+                            const notif = document.getElementById('killNotif');
+                            notif.innerHTML = `⏱️ TIME NORMAL`;
+                            notif.style.display = 'block';
+                            setTimeout(() => { notif.style.display = 'none'; }, 800);
+                        }, 8000);
+                        player.tacticalCooldowns[slot] = 900; // 15 second cooldown
+                        showSarahMessage('pickup_speed');
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `⏱️ TIME DISTORTION ACTIVE!`;
+                        notif.style.backgroundColor = 'rgba(139, 92, 246, 0.95)';
+                        notif.style.display = 'block';
+                        setTimeout(() => { 
+                            notif.style.display = 'none';
+                            notif.style.backgroundColor = '';
+                        }, 1500);
+                    }
+                }
+            }
+            
+            // Player shooting - shoot more consistently
+            if (mouse.clicked && Math.random() < 0.3) {
+                shoot();
+            }
+            
+            // Shield timer
+            if (player.shield) {
+                player.shieldTime--;
+                if (player.shieldTime <= 0) {
+                    player.shield = false;
+                }
+            }
+            
+            // Pickup collisions
+            pickups.forEach(pickup => {
+                if (!pickup.active) return;
+                
+                const dx = player.x - pickup.x;
+                const dy = player.y - pickup.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < player.size + 20) {
+                    pickup.active = false;
+                    
+                    switch(pickup.type) {
+                        case 'health':
+                            player.hp = Math.min(player.maxHp, player.hp + 50);
+                            document.getElementById('playerHP').textContent = Math.floor(player.hp);
+                            showSarahMessage('pickup_health');
+                            break;
+                        case 'damage':
+                            player.damage = player.baseDamage * 2;
+                            showSarahMessage('pickup_damage');
+                            setTimeout(() => { player.damage = player.baseDamage; }, 10000);
+                            break;
+                        case 'speed':
+                            player.speed = player.baseSpeed * 1.5;
+                            showSarahMessage('pickup_speed');
+                            setTimeout(() => { player.speed = player.baseSpeed; }, 8000);
+                            break;
+                        case 'shield':
+                            player.shield = true;
+                            player.shieldTime = 300;
+                            showSarahMessage('pickup_shield');
+                            break;
+                    }
+                    
+                    // Respawn pickup after 20 seconds
+                    setTimeout(() => { pickup.active = true; }, 20000);
+                }
+            });
+            
+            // Player movement
+            let newX = player.x;
+            let newY = player.y;
+            
+            if (keys['w'] || keys['arrowup']) newY -= player.speed;
+            if (keys['s'] || keys['arrowdown']) newY += player.speed;
+            if (keys['a'] || keys['arrowleft']) newX -= player.speed;
+            if (keys['d'] || keys['arrowright']) newX += player.speed;
+            
+            if (!checkWallCollision(player, newX, player.y)) {
+                player.x = Math.max(player.size, Math.min(canvas.logicalWidth - player.size, newX));
+            }
+            if (!checkWallCollision(player, player.x, newY)) {
+                player.y = Math.max(player.size, Math.min(canvas.logicalHeight - player.size, newY));
+            }
+            
+            player.angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+            
+            // Update enemies
+            enemies.forEach((enemy, index) => {
+                // Enemy AI: sometimes target other enemies (80% chance), otherwise target player (20%)
+                let targetX, targetY;
+                if (!enemy.target || Math.random() < 0.01) { // Reassign target occasionally
+                    if (Math.random() < 0.8 && enemies.length > 1) {
+                        // Target random enemy
+                        const otherEnemies = enemies.filter((_, i) => i !== index);
+                        enemy.target = otherEnemies[Math.floor(Math.random() * otherEnemies.length)];
+                    } else {
+                        // Target player
+                        enemy.target = player;
+                    }
+                }
+                
+                targetX = enemy.target.x;
+                targetY = enemy.target.y;
+                
+                const dx = targetX - enemy.x;
+                const dy = targetY - enemy.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist > 0) {
+                    let newX = enemy.x + (dx/dist) * enemy.speed;
+                    let newY = enemy.y + (dy/dist) * enemy.speed;
+                    
+                    if (!checkWallCollision(enemy, newX, enemy.y)) {
+                        enemy.x = newX;
+                    }
+                    if (!checkWallCollision(enemy, enemy.x, newY)) {
+                        enemy.y = newY;
+                    }
+                }
+                
+                enemy.shootCooldown--;
+                if (enemy.shootCooldown <= 0 && dist < 400) {
+                    if (dist > 0) {
+                        bullets.push({
+                            x: enemy.x,
+                            y: enemy.y,
+                            vx: (dx/dist) * 10,
+                            vy: (dy/dist) * 10,
+                            damage: enemy.damage,
+                            isPlayer: false,
+                            owner: enemy, // Track which enemy shot this
+                            size: 4
+                        });
+                    }
+                    enemy.shootCooldown = 40 + Math.random() * 40;
+                }
+            });
+            
+            // Update bullets
+            bullets = bullets.filter(bullet => {
+                bullet.x += bullet.vx;
+                bullet.y += bullet.vy;
+                
+                // Wall collision
+                for (let wall of walls) {
+                    if (bullet.x > wall.x && bullet.x < wall.x + wall.width &&
+                        bullet.y > wall.y && bullet.y < wall.y + wall.height) {
+                        return false;
+                    }
+                }
+                
+                // Enemy collision
+                if (bullet.isPlayer) {
+                    for (let i = enemies.length - 1; i >= 0; i--) {
+                        const enemy = enemies[i];
+                        const dx = bullet.x - enemy.x;
+                        const dy = bullet.y - enemy.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if (dist < enemy.size) {
+                            enemy.hp -= bullet.damage;
+                            if (enemy.hp <= 0) {
+                                // Enemy lost a life
+                                enemy.lives--;
+                                
+                                if (enemy.lives > 0) {
+                                    // Respawn enemy with new HP
+                                    const hpVal = 120 + Math.random() * 150;
+                                    enemy.hp = hpVal;
+                                    enemy.maxHp = hpVal;
+                                    
+                                    // Respawn at random edge
+                                    const edge = Math.floor(Math.random() * 4);
+                                    if (edge === 0) { enemy.x = Math.random() * canvas.logicalWidth; enemy.y = -40; }
+                                    else if (edge === 1) { enemy.x = canvas.logicalWidth + 40; enemy.y = Math.random() * canvas.logicalHeight; }
+                                    else if (edge === 2) { enemy.x = Math.random() * canvas.logicalWidth; enemy.y = canvas.logicalHeight + 40; }
+                                    else { enemy.x = -40; enemy.y = Math.random() * canvas.logicalHeight; }
+                                } else {
+                                    // Enemy is out of lives
+                                    enemies.splice(i, 1);
+                                    aliveCount--;
+                                    document.getElementById('aliveCount').textContent = aliveCount;
+                                }
+                                
+                                kills++;
+                                streak++;
+                                
+                                // Player gets immediate BAKE reward
+                                let playerBake = 100;
+                                balance += playerBake;
+                                document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                addHistoryEntry('Kill reward', playerBake, 'earn');
+                                
+                                // Pot gets larger reward
+                                let potBake = 1000;
+                                pot += potBake;
+                                document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                
+                                // Show kill notification
+                                const notif = document.getElementById('killNotif');
+                                notif.innerHTML = `🎯 KILL! +${playerBake} BAKE`;
+                                notif.style.display = 'block';
+                                setTimeout(() => { notif.style.display = 'none'; }, 1500);
+                                
+                                document.getElementById('killCount').textContent = kills;
+                                document.getElementById('streakCount').textContent = streak;
+                                
+                                if (kills === 1) showSarahMessage('kill1');
+                                else if (kills === 3) { 
+                                    let streakBake = 500;
+                                    balance += streakBake;
+                                    document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                    addHistoryEntry('3-kill streak bonus', streakBake, 'earn');
+                                    
+                                    pot += 5000; 
+                                    document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                    const notif = document.getElementById('killNotif');
+                                    notif.innerHTML = `🔥 3X STREAK! +${streakBake} BAKE`;
+                                    notif.style.display = 'block';
+                                    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                                    showSarahMessage('kill3'); 
+                                }
+                                else if (kills === 5) { 
+                                    let streakBake = 500;
+                                    balance += streakBake;
+                                    document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                    addHistoryEntry('5-kill streak bonus', streakBake, 'earn');
+                                    
+                                    pot += 5000; 
+                                    document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                    const notif = document.getElementById('killNotif');
+                                    notif.innerHTML = `🔥🔥 5X STREAK! +${streakBake} BAKE`;
+                                    notif.style.display = 'block';
+                                    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                                    showSarahMessage('kill5'); 
+                                }
+                                else if (kills === 8) { 
+                                    let streakBake = 500;
+                                    balance += streakBake;
+                                    document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                    addHistoryEntry('8-kill streak bonus', streakBake, 'earn');
+                                    
+                                    pot += 5000; 
+                                    document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                    const notif = document.getElementById('killNotif');
+                                    notif.innerHTML = `🔥🔥 8X STREAK! +${streakBake} BAKE`;
+                                    notif.style.display = 'block';
+                                    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                                    showSarahMessage('kill8'); 
+                                }
+                                else if (kills === 10) { 
+                                    let streakBake = 500;
+                                    balance += streakBake;
+                                    document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                    addHistoryEntry('10-kill streak bonus', streakBake, 'earn');
+                                    
+                                    pot += 5000; 
+                                    document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                    const notif = document.getElementById('killNotif');
+                                    notif.innerHTML = `🔥🔥🔥 10X STREAK! +${streakBake} BAKE`;
+                                    notif.style.display = 'block';
+                                    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                                    showSarahMessage('kill10'); 
+                                }
+                                else if (kills === 15) { 
+                                    let streakBake = 500;
+                                    balance += streakBake;
+                                    document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                    
+                                    pot += 5000; 
+                                    document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                    const notif = document.getElementById('killNotif');
+                                    notif.innerHTML = `🔥🔥🔥 15X STREAK! +${streakBake} BAKE`;
+                                    notif.style.display = 'block';
+                                    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                                    showSarahMessage('kill15'); 
+                                }
+                                else if (kills === 20) { 
+                                    let streakBake = 500;
+                                    balance += streakBake;
+                                    document.getElementById('playerBAKE').textContent = Math.floor(balance).toLocaleString();
+                                    
+                                    pot += 5000; 
+                                    document.getElementById('currentPot').textContent = pot.toLocaleString();
+                                    const notif = document.getElementById('killNotif');
+                                    notif.innerHTML = `🔥🔥🔥 20X STREAK! +${streakBake} BAKE`;
+                                    notif.style.display = 'block';
+                                    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+                                    showSarahMessage('kill20'); 
+                                }
+                                
+                                if (aliveCount === 2) showSarahMessage('lastStanding');
+                                if (aliveCount === 1) endGame(true);
+                            }
+                            return false;
+                        }
+                    }
+                } else {
+                    // Enemy bullet - can hit player OR other enemies
+                    
+                    // Check collision with player
+                    const dxPlayer = bullet.x - player.x;
+                    const dyPlayer = bullet.y - player.y;
+                    const distPlayer = Math.sqrt(dxPlayer*dxPlayer + dyPlayer*dyPlayer);
+                    
+                    if (distPlayer < player.size) {
+                        if (!player.shield) {
+                            player.hp -= bullet.damage * 0.5; // Reduce damage to 50% so health decrements gradually
+                            streak = 0;
+                            document.getElementById('playerHP').textContent = Math.max(0, Math.floor(player.hp));
+                            document.getElementById('streakCount').textContent = 0;
+                            
+                            if (player.hp < player.maxHp * 0.3) {
+                                showSarahMessage('lowHP');
+                            }
+                            
+                            if (player.hp <= 0) {
+                                endGame(false);
+                            }
+                        }
+                        return false;
+                    }
+                    
+                    // Check collision with enemies (but not the shooter)
+                    for (let i = enemies.length - 1; i >= 0; i--) {
+                        const enemy = enemies[i];
+                        if (bullet.owner === enemy) continue; // Don't hit self
+                        
+                        const dxEnemy = bullet.x - enemy.x;
+                        const dyEnemy = bullet.y - enemy.y;
+                        const distEnemy = Math.sqrt(dxEnemy*dxEnemy + dyEnemy*dyEnemy);
+                        
+                        if (distEnemy < enemy.size) {
+                            enemy.hp -= bullet.damage * 0.5; // Enemy bullets do half damage to other enemies
+                            if (enemy.hp <= 0) {
+                                enemies.splice(i, 1);
+                                aliveCount--;
+                                document.getElementById('aliveCount').textContent = aliveCount;
+                                
+                                if (aliveCount === 2) showSarahMessage('lastStanding');
+                                if (aliveCount === 1) endGame(true);
+                            }
+                            return false;
+                        }
+                    }
+                }
+                
+                return bullet.x > 0 && bullet.x < canvas.logicalWidth && bullet.y > 0 && bullet.y < canvas.logicalHeight;
+            });
+            
+            draw();
+        }
+        
+        function draw() {
+            const w = canvas.logicalWidth;
+            const h = canvas.logicalHeight;
+            
+            // Clear with gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, '#0a0e1a');
+            gradient.addColorStop(1, '#0f1419');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+            
+            // Grid
+            ctx.strokeStyle = '#1a1f2e';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < w; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, h);
+                ctx.stroke();
+            }
+            for (let i = 0; i < h; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(w, i);
+                ctx.stroke();
+            }
+            
+            // Walls
+            ctx.fillStyle = '#334155';
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            walls.forEach(wall => {
+                ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+                ctx.strokeRect(wall.x, wall.y, wall.width, wall.height);
+            });
+            
+            // Pickups
+            pickups.forEach(pickup => {
+                if (!pickup.active) return;
+                
+                ctx.save();
+                ctx.translate(pickup.x, pickup.y);
+                
+                // Pulsing circle background
+                const pulseSize = 25 + Math.sin(Date.now() / 200) * 5;
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.3)';
+                ctx.beginPath();
+                ctx.arc(0, 0, pulseSize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.font = '32px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(pickup.icon, 0, 0);
+                ctx.restore();
+            });
+            
+            // Enemies
+            enemies.forEach(enemy => {
+                ctx.save();
+                ctx.translate(enemy.x, enemy.y);
+                
+                // Draw varied rectangle based on vehicle type
+                ctx.fillStyle = enemy.color;
+                ctx.fillRect(-enemy.width/2, -enemy.height/2, enemy.width, enemy.height);
+                
+                // Draw name on rectangle
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 8px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(enemy.name, 0, 0);
+                
+                // HP bar
+                const barWidth = 50;
+                const barHeight = 5;
+                const hpPercent = enemy.hp / enemy.maxHp;
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(-barWidth/2, -Math.max(enemy.width, enemy.height)/2 - 12, barWidth, barHeight);
+                ctx.fillStyle = hpPercent > 0.6 ? '#22c55e' : hpPercent > 0.3 ? '#fbbf24' : '#ef4444';
+                ctx.fillRect(-barWidth/2, -Math.max(enemy.width, enemy.height)/2 - 12, barWidth * hpPercent, barHeight);
+                ctx.restore();
+            });
+            
+            // Turrets
+            activeTurrets.forEach(turret => {
+                if (!turret.active) return;
+                
+                // Draw BIG red square turret (50x50)
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(turret.x - 25, turret.y - 25, 50, 50);
+                
+                // Draw thick yellow border
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(turret.x - 25, turret.y - 25, 50, 50);
+                
+                // Draw gun icon BIGGER
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 32px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🔫', turret.x, turret.y);
+            });
+            
+            // Player
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            
+            // Shield visual
+            if (player.shield) {
+                const shieldPulse = 35 + Math.sin(Date.now() / 100) * 3;
+                ctx.strokeStyle = 'rgba(59, 130, 246, 0.8)';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.arc(0, 0, shieldPulse, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, shieldPulse + 5, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            ctx.rotate(player.angle);
+            
+            // Draw rectangle with skin color if purchased
+            let playerColor = '#10b981'; // Default green
+            if (inventory.skins.includes('gold')) playerColor = '#fbbf24'; // Gold
+            else if (inventory.skins.includes('diamond')) playerColor = '#38bdf8'; // Diamond blue
+            else if (inventory.skins.includes('ruby')) playerColor = '#ef4444'; // Ruby red
+            else if (inventory.skins.includes('emerald')) playerColor = '#10b981'; // Emerald (brighter)
+            else if (inventory.skins.includes('carbon')) playerColor = '#1e293b'; // Carbon black
+            else if (inventory.skins.includes('platinum')) playerColor = '#94a3b8'; // Platinum
+            
+            ctx.fillStyle = playerColor;
+            ctx.fillRect(-player.size/2, -player.size/2, player.size, player.size);
+            
+            // Draw username on rectangle
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(username, 0, 0);
+            
+            // HP bar
+            const barWidth = 50;
+            const barHeight = 5;
+            const hpPercent = player.hp / player.maxHp;
+            ctx.rotate(-player.angle);
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(-barWidth/2, -player.size - 12, barWidth, barHeight);
+            ctx.fillStyle = hpPercent > 0.6 ? '#22c55e' : hpPercent > 0.3 ? '#fbbf24' : '#ef4444';
+            ctx.fillRect(-barWidth/2, -player.size - 12, barWidth * hpPercent, barHeight);
+            ctx.restore();
+            
+            // Bullets
+            bullets.forEach(bullet => {
+                ctx.fillStyle = bullet.color || (bullet.isPlayer ? '#3b82f6' : '#ef4444');
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, bullet.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        
+        function endGame(won) {
+            clearInterval(gameLoop);
+            canvas.removeEventListener('mousemove', handleMouseMove);
+            canvas.removeEventListener('mousedown', handleMouseDown);
+            canvas.removeEventListener('mouseup', handleMouseUp);
+            
+            if (won) {
+                showSarahMessage('victory');
+                balance += pot;
+                totalKills += kills;
+                document.getElementById('walletBalBanner').textContent = balance.toLocaleString();
+                
+                // Add to history and leaderboard
+                addHistoryEntry('Victory! Won pot', pot, 'earn');
+                leaderboard.push({ 
+                    name: username, 
+                    bake: pot, 
+                    kills: kills,
+                    date: new Date().toISOString()
+                });
+                leaderboard.sort((a, b) => b.bake - a.bake);
+                leaderboard = leaderboard.slice(0, 20); // Keep top 20
+                localStorage.setItem('bakeLeaderboard', JSON.stringify(leaderboard));
+                updateLeaderboardDisplay();
+                
+                // Update pool data to reflect marketcap change
+                updatePoolData();
+                
+                setTimeout(async () => {
+                    const playAgain = await showCustomModal('🏆 VICTORY!', `You won ${pot.toLocaleString()} BAKE!\n\nKills: ${kills}\nTime: ${Math.floor(gameTime/60)}:${(gameTime%60).toString().padStart(2,'0')}`, [{text: 'Play Again'}, {text: 'Exit'}]);
+                    if (playAgain) {
+                        lives = 5;
+                        document.getElementById('livesCount').textContent = lives;
+                        totalKills = 0;
+                        document.getElementById('gameArea').style.display = 'none';
+                        document.getElementById('vehicleSelect').style.display = 'block';
+                    } else {
+                        lives = 5;
+                        document.getElementById('livesCount').textContent = lives;
+                        totalKills = 0;
+                        document.getElementById('gameArea').style.display = 'none';
+                        document.getElementById('gameSetup').style.display = 'block';
+                        resetEntryButton(); // Reset button state
+                        switchTab('play');
+                    }
+                }, 2000);
+            } else {
+                lives--;
+                document.getElementById('livesCount').textContent = lives; // Update lives display
+                totalKills += kills;
+                
+                if (lives > 0) {
+                    setTimeout(() => {
+                        respawnPlayer();
+                    }, 300); // Reduced from 1000ms for smoother respawn
+                } else {
+                    setTimeout(async () => {
+                        const playAgain = await showCustomModal('💀 ELIMINATED!', `Total Kills: ${totalKills}\nTime: ${Math.floor(gameTime/60)}:${(gameTime%60).toString().padStart(2,'0')}\n\nPlay again for 1 SGB?`, [{text: 'Pay & Play'}, {text: 'Exit'}]);
+                        if (playAgain) {
+                            lives = 5;
+                            document.getElementById('livesCount').textContent = lives;
+                            totalKills = 0;
+                            document.getElementById('gameArea').style.display = 'none';
+                            document.getElementById('gameSetup').style.display = 'block';
+                            resetEntryButton(); // Reset button state
+                        } else {
+                            lives = 5;
+                            document.getElementById('livesCount').textContent = lives;
+                            totalKills = 0;
+                            document.getElementById('gameArea').style.display = 'none';
+                            document.getElementById('gameSetup').style.display = 'block';
+                            resetEntryButton(); // Reset button state
+                            switchTab('play');
+                        }
+                    }, 1000);
+                }
+            }
+        }
+        
+        function respawnPlayer() {
+            const w = canvas.logicalWidth;
+            const h = canvas.logicalHeight;
+            
+            player.x = w / 2;
+            player.y = h / 2;
+            player.hp = player.maxHp;
+            player.vx = 0;
+            player.vy = 0;
+            player.shield = false;
+            player.shieldTime = 0;
+            
+            document.getElementById('playerHP').textContent = player.maxHp;
+            
+            // Re-add event listeners that were removed in endGame
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            
+            showSarahMessage('start');
+            
+            gameLoop = setInterval(update, 1000/60);
+        }
+        
+        function showCategory(category) {
+            document.querySelectorAll('.category-tab-btn').forEach(btn => {
+                btn.style.borderColor = '#334155';
+                btn.style.background = 'rgba(30, 41, 59, 0.8)';
+            });
+            
+            event.target.style.borderColor = '#ec4899';
+            event.target.style.background = 'rgba(236, 72, 153, 0.2)';
+            
+            const items = MARKETPLACE[category];
+            const container = document.getElementById('marketplaceItems');
+            
+            container.innerHTML = items.map(item => {
+                const owned = inventory[category].includes(item.id);
+                const rarityColors = {
+                    legendary: '#fbbf24',
+                    epic: '#a855f7',
+                    rare: '#3b82f6',
+                    common: '#94a3b8'
+                };
+                
+                return `
+                    <div style="background: linear-gradient(135deg, #1e293b, #334155); border: 2px solid ${owned ? '#22c55e' : '#334155'}; padding: 20px; border-radius: 12px; cursor: ${owned ? 'default' : 'pointer'}; text-align: center; transition: all 0.3s; ${owned ? 'opacity: 0.7;' : ''}" onclick="${owned ? '' : `buyItem('${category}', '${item.id}', ${item.price}, '${item.name}')`}">
+                        <div style="height: 100px; display: flex; align-items: center; justify-content: center; font-size: 64px; margin-bottom: 15px; border-radius: 8px; background: linear-gradient(135deg, rgba(30,41,59,0.8), ${item.color || '#334155'});">
+                            ${item.icon}
+                        </div>
+                        <div style="font-size: 10px; font-weight: bold; margin-bottom: 5px; color: ${rarityColors[item.rarity]};">${item.rarity.toUpperCase()}</div>
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">${item.name}</div>
+                        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 10px; line-height: 1.4;">${item.desc}</div>
+                        <div style="font-size: 20px; color: #fbbf24; font-weight: bold; margin-bottom: 10px;">${item.price.toLocaleString()} BAKE</div>
+                        <button style="background: ${owned ? '#22c55e' : 'linear-gradient(135deg, #ec4899, #d946ef)'}; border: none; padding: 10px 20px; border-radius: 8px; color: white; font-size: 14px; font-weight: bold; cursor: ${owned ? 'default' : 'pointer'}; width: 100%;">
+                            ${owned ? '✓ OWNED' : 'BUY NOW'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Custom modal system
+        function showCustomModal(title, message, buttons = [{text: 'OK', onClick: null}]) {
+            return new Promise(resolve => {
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:10000;';
+                
+                const buttonHtml = buttons.map((btn, i) => 
+                    `<button id="modalBtn${i}" style="background:${i===0?'linear-gradient(135deg,#3b82f6,#2563eb)':'rgba(71,85,105,0.5)'};border:${i===0?'none':'2px solid #475569'};padding:15px 40px;border-radius:12px;color:white;font-size:18px;font-weight:bold;cursor:pointer;margin:5px;">${btn.text}</button>`
+                ).join('');
+                
+                modal.innerHTML = `<div style="background:linear-gradient(135deg,#0f172a,#1e293b);border:3px solid #3b82f6;border-radius:20px;padding:40px;text-align:center;max-width:500px;"><div style="font-size:36px;font-weight:bold;color:#3b82f6;margin-bottom:20px;">${title}</div><div style="color:#e2e8f0;font-size:18px;margin-bottom:30px;line-height:1.6;white-space:pre-line;">${message}</div><div>${buttonHtml}</div></div>`;
+                
+                document.body.appendChild(modal);
+                
+                buttons.forEach((btn, i) => {
+                    document.getElementById(`modalBtn${i}`).onclick = () => {
+                        document.body.removeChild(modal);
+                        if (btn.onClick) btn.onClick();
+                        resolve(i === 0);
+                    };
+                });
+            });
+        }
+        
+        function buyItem(category, itemId, price, name) {
+            if (!wallet) {
+                showCustomModal('⚠️ Wallet Required', 'Connect your wallet first', [{text: 'OK'}]);
+                return;
+            }
+            
+            if (inventory[category].includes(itemId)) {
+                return;
+            }
+            
+            if (balance < price) {
+                showCustomModal('⚠️ Insufficient BAKE', `You need ${price.toLocaleString()} BAKE\nYour balance: ${balance.toLocaleString()} BAKE`, [{text: 'Buy BAKE', onClick: () => switchTab('buy')}, {text: 'Cancel'}]);
+                return;
+            }
+            
+            showCustomModal('💰 Confirm Purchase', `Purchase ${name} for ${price.toLocaleString()} BAKE?`, [{text: 'Purchase', onClick: () => {
+                balance -= price;
+                document.getElementById('walletBalBanner').textContent = balance.toLocaleString();
+                inventory[category].push(itemId);
+                showCustomModal('✅ Purchase Successful!', `${name} is now yours!\n\n${price.toLocaleString()} BAKE burned from supply`);
+                showCategory(category);
+            }}, {text: 'Cancel'}]);
+        }
+        
+        async function buyPackage(bakeAmount, sgbCost) {
+            if (!wallet) {
+                await showCustomModal('⚠️ Wallet Required', 'Connect your wallet first');
+                switchTab('play');
+                return;
+            }
+            
+            try {
+                const confirmed = await showCustomModal('💰 Buy BAKE', `Buy ${bakeAmount.toLocaleString()} BAKE for ${sgbCost} SGB?`, [{text: 'Buy'}, {text: 'Cancel'}]);
+                if (!confirmed) return;
+                
+                const sgbWei = ethers.utils.parseEther(sgbCost.toString());
+                
+                showCustomModal('⏳ Opening MetaMask', 'Check your MetaMask popup to confirm!');
+                
+                const tx = await poolContract.swapC2FLRforOOPS({value: sgbWei});
+                
+                showCustomModal('⏳ Processing', 'Transaction submitted! Waiting for blockchain confirmation...');
+                
+                await tx.wait();
+                
+                // Update balances
+                const newBalance = await bakeContract.balanceOf(wallet);
+                balance = parseFloat(ethers.utils.formatEther(newBalance));
+                document.getElementById('walletBalBanner').textContent = Math.floor(balance).toLocaleString();
+                
+                const newSgbBalance = await provider.getBalance(wallet);
+                sgbBalance = parseFloat(ethers.utils.formatEther(newSgbBalance));
+                document.getElementById('walletSGBBanner').textContent = sgbBalance.toFixed(2);
+                
+                await updatePoolData();
+                
+                await showCustomModal('✅ Purchase Complete', `You received ${bakeAmount.toLocaleString()} BAKE tokens!`);
+                
+            } catch (error) {
+                console.error('Buy error:', error);
+                await showCustomModal('❌ Transaction Failed', error.message);
+            }
+        }
+        
+        async function addLiquidity() {
+            if (!wallet) {
+                await showCustomModal('⚠️ Wallet Required', 'Connect wallet first');
+                switchTab('play');
+                return;
+            }
+            
+            try {
+                const sgbAmount = parseFloat(document.getElementById('wsgbInput').value) || 0;
+                const bakeAmount = parseFloat(document.getElementById('bakeRequired').value) || 0;
+                
+                if (sgbAmount <= 0 || bakeAmount <= 0) {
+                    await showCustomModal('⚠️ Invalid Amount', 'Please enter valid amounts');
+                    return;
+                }
+                
+                if (balance < bakeAmount) {
+                    await showCustomModal('⚠️ Insufficient BAKE', `You need ${bakeAmount.toLocaleString()} BAKE`);
+                    return;
+                }
+                
+                const confirmed = await showCustomModal('💧 Add Liquidity', `Add ${sgbAmount} SGB + ${bakeAmount.toFixed(0)} BAKE to liquidity?`, [{text: 'Confirm'}, {text: 'Cancel'}]);
+                if (!confirmed) return;
+                
+                const bakeWei = ethers.utils.parseEther(bakeAmount.toString());
+                const sgbWei = ethers.utils.parseEther(sgbAmount.toString());
+                
+                // Step 1: Approve
+                showCustomModal('⏳ Step 1 of 2', 'Check MetaMask to approve BAKE spending...');
+                const approveTx = await bakeContract.approve(CONTRACTS.POOL_CONTRACT, bakeWei);
+                
+                showCustomModal('⏳ Step 1 of 2', 'Approval submitted! Waiting for confirmation...');
+                await approveTx.wait();
+                
+                // Step 2: Add liquidity
+                showCustomModal('⏳ Step 2 of 2', 'Check MetaMask to add liquidity...');
+                const tx = await poolContract.addLiquidity(bakeWei, {value: sgbWei});
+                
+                showCustomModal('⏳ Step 2 of 2', 'Transaction submitted! Waiting for confirmation...');
+                await tx.wait();
+                
+                const newBalance = await bakeContract.balanceOf(wallet);
+                balance = parseFloat(ethers.utils.formatEther(newBalance));
+                document.getElementById('walletBalBanner').textContent = Math.floor(balance).toLocaleString();
+                
+                const newSgbBalance = await provider.getBalance(wallet);
+                sgbBalance = parseFloat(ethers.utils.formatEther(newSgbBalance));
+                document.getElementById('walletSGBBanner').textContent = sgbBalance.toFixed(2);
+                
+                document.getElementById('wsgbInput').value = '';
+                document.getElementById('bakeRequired').value = '';
+                
+                await updatePoolData();
+                
+                await showCustomModal('✅ Success', 'Liquidity added successfully');
+                
+            } catch (error) {
+                console.error('Add liquidity error:', error);
+                await showCustomModal('❌ Transaction Failed', error.message);
+            }
+        }
+        
+        async function executeSwap() {
+            if (!wallet) {
+                await showCustomModal('⚠️ Wallet Required', 'Connect your wallet first');
+                switchTab('play');
+                return;
+            }
+            
+            try {
+                const fromAmount = parseFloat(document.getElementById('swapFromAmount').value) || 0;
+                const fromToken = document.getElementById('swapFromToken').value;
+                
+                if (fromAmount <= 0) {
+                    await showCustomModal('⚠️ Invalid Amount', 'Enter valid swap amount');
+                    return;
+                }
+                
+                if (fromToken === 'BAKE' && balance < fromAmount) {
+                    await showCustomModal('⚠️ Insufficient BAKE', `You need ${fromAmount.toLocaleString()} BAKE`);
+                    return;
+                }
+                
+                const confirmed = await showCustomModal('🔄 Confirm Swap', `Swap ${fromAmount.toFixed(2)} ${fromToken}?`, [{text: 'Confirm'}, {text: 'Cancel'}]);
+                if (!confirmed) return;
+                
+                let tx;
+                if (fromToken === 'SGB') {
+                    showCustomModal('⏳ Opening MetaMask', 'Check your MetaMask popup to confirm swap!');
+                    
+                    const sgbWei = ethers.utils.parseEther(fromAmount.toString());
+                    tx = await poolContract.swapC2FLRforOOPS({value: sgbWei});
+                    
+                    showCustomModal('⏳ Processing', 'Swap submitted! Waiting for confirmation...');
+                } else {
+                    const bakeWei = ethers.utils.parseEther(fromAmount.toString());
+                    
+                    // Step 1: Approve
+                    showCustomModal('⏳ Step 1 of 2', 'Check MetaMask to approve BAKE...');
+                    const approveTx = await bakeContract.approve(CONTRACTS.POOL_CONTRACT, bakeWei);
+                    
+                    showCustomModal('⏳ Step 1 of 2', 'Approval submitted! Waiting for confirmation...');
+                    await approveTx.wait();
+                    
+                    // Step 2: Swap
+                    showCustomModal('⏳ Step 2 of 2', 'Check MetaMask to confirm swap...');
+                    tx = await poolContract.swapOOPSforC2FLR(bakeWei);
+                    
+                    showCustomModal('⏳ Step 2 of 2', 'Swap submitted! Waiting for confirmation...');
+                }
+                
+                await tx.wait();
+                
+                // Update balances
+                const newBalance = await bakeContract.balanceOf(wallet);
+                balance = parseFloat(ethers.utils.formatEther(newBalance));
+                document.getElementById('walletBalBanner').textContent = Math.floor(balance).toLocaleString();
+                
+                const newSgbBalance = await provider.getBalance(wallet);
+                sgbBalance = parseFloat(ethers.utils.formatEther(newSgbBalance));
+                document.getElementById('walletSGBBanner').textContent = sgbBalance.toFixed(2);
+                
+                document.getElementById('swapFromAmount').value = '';
+                document.getElementById('swapToAmount').value = '';
+                
+                await updatePoolData();
+                
+                await showCustomModal('✅ Success', 'Swap complete!');
+                
+            } catch (error) {
+                console.error('Swap error:', error);
+                await showCustomModal('❌ Transaction Failed', error.message);
+            }
+        }
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+            
+            if (tab === 'leaderboard') {
+                updateLeaderboard();
+            }
+            
+            if (tab === 'marketplace') {
+                showCategory('tacticals'); // Changed to tacticals first
+            }
+            
+            if (tab === 'pool' && !wallet) {
+                // Load pool data even without wallet
+                loadPoolDataWithoutWallet();
+            }
+        }
+        
+        async function loadPoolDataWithoutWallet() {
+            try {
+                const tempProvider = new ethers.providers.JsonRpcProvider('https://songbird-api.flare.network/ext/bc/C/rpc');
+                const POOL_ABI = [
+                    "function reserveC2FLR() view returns (uint256)",
+                    "function reserveOOPS() view returns (uint256)"
+                ];
+                const tempPoolContract = new ethers.Contract(CONTRACTS.POOL_CONTRACT, POOL_ABI, tempProvider);
+                
+                const c2flrReserve = await tempPoolContract.reserveC2FLR();
+                const bakeReserve = await tempPoolContract.reserveOOPS();
+                
+                const wsgbAmount = parseFloat(ethers.utils.formatEther(c2flrReserve));
+                const bakeAmount = parseFloat(ethers.utils.formatEther(bakeReserve));
+                
+                if (wsgbAmount > 0 && bakeAmount > 0) {
+                    const price = wsgbAmount / bakeAmount;
+                    const priceUSD = price * 0.0027;
+                    const marketCap = priceUSD * 11900000000;
+                    document.getElementById('marketCap').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                }
+            } catch (error) {
+                console.error('Error loading pool data:', error);
+            }
+        }
+        
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = leaderboard.map((entry, i) => `
+                <div class="leaderboard-entry ${i < 3 ? 'top' : ''}">
+                    <div>
+                        <span style="color: ${i === 0 ? '#fbbf24' : i === 1 ? '#94a3b8' : i === 2 ? '#c2410c' : '#64748b'};">
+                            ${i + 1}. ${entry.name}
+                        </span>
+                    </div>
+                    <div>
+                        <span style="color: #22c55e;">${entry.wins} wins</span> • 
+                        <span style="color: #fbbf24;">${entry.bake.toLocaleString()} BAKE</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Add input listeners
+        window.addEventListener('load', async function() {
+            // Load history and leaderboard
+            updateHistoryTable();
+            updateLeaderboardDisplay();
+            
+            // Load pool data on page load (before wallet connects)
+            try {
+                if (typeof ethers !== 'undefined') {
+                    const tempProvider = new ethers.providers.JsonRpcProvider('https://songbird-api.flare.network/ext/C/rpc');
+                    const tempPoolContract = new ethers.Contract(
+                        CONTRACTS.POOL_CONTRACT,
+                        ["function reserveC2FLR() view returns (uint256)", "function reserveOOPS() view returns (uint256)"],
+                        tempProvider
+                    );
+                    
+                    const c2flrReserve = await tempPoolContract.reserveC2FLR();
+                    const bakeReserve = await tempPoolContract.reserveOOPS();
+                    
+                    const wsgbAmount = parseFloat(ethers.utils.formatEther(c2flrReserve));
+                    const bakeAmount = parseFloat(ethers.utils.formatEther(bakeReserve));
+                    
+                    if (wsgbAmount > 0 && bakeAmount > 0) {
+                        const price = wsgbAmount / bakeAmount;
+                        const priceUSD = price * 0.0027;
+                        const marketCap = priceUSD * 11900000000;
+                        document.getElementById('marketcapLP').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                    }
+                }
+            } catch (error) {
+                console.log('Could not load initial pool data:', error);
+            }
+            
+            // LP calculator - calculate based on current pool price
+            const wsgbInput = document.getElementById('wsgbInput');
+            if (wsgbInput) {
+                wsgbInput.addEventListener('input', function() {
+                    const wsgbAmount = parseFloat(this.value) || 0;
+                    if (wsgbAmount > 0) {
+                        const poolWsgb = parseFloat(document.getElementById('poolWsgb').textContent.replace(/,/g, '')) || 100000;
+                        const poolBake = parseFloat(document.getElementById('poolBake').textContent.replace(/,/g, '')) || 3846154;
+                        const currentRatio = poolBake / poolWsgb;
+                        const bakeAmount = wsgbAmount * currentRatio * 0.5;
+                        document.getElementById('bakeRequired').value = bakeAmount.toFixed(2);
+                    } else {
+                        document.getElementById('bakeRequired').value = '';
+                    }
+                });
+            }
+            
+            // Swap calculator  
+            const swapFromAmount = document.getElementById('swapFromAmount');
+            const swapFromToken = document.getElementById('swapFromToken');
+            
+            function updateSwapEstimate() {
+                const fromAmount = parseFloat(swapFromAmount.value) || 0;
+                const fromToken = swapFromToken.value;
+                
+                if (fromAmount > 0) {
+                    const poolWsgb = parseFloat(document.getElementById('poolWsgb').textContent.replace(/,/g, '')) || 100000;
+                    const poolBake = parseFloat(document.getElementById('poolBake').textContent.replace(/,/g, '')) || 3846154;
+                    
+                    let toAmount = 0;
+                    if (fromToken === 'SGB') {
+                        const newWsgbReserve = poolWsgb + fromAmount;
+                        const newBakeReserve = (poolWsgb * poolBake) / newWsgbReserve;
+                        toAmount = poolBake - newBakeReserve;
+                    } else {
+                        const newBakeReserve = poolBake + fromAmount;
+                        const newWsgbReserve = (poolWsgb * poolBake) / newBakeReserve;
+                        toAmount = poolWsgb - newWsgbReserve;
+                    }
+                    document.getElementById('swapToAmount').value = toAmount.toFixed(6);
+                } else {
+                    document.getElementById('swapToAmount').value = '';
+                }
+            }
+            
+            if (swapFromAmount) {
+                swapFromAmount.addEventListener('input', updateSwapEstimate);
+                swapFromToken.addEventListener('change', updateSwapEstimate);
+            }
+        });
+    </script>
+</body>
+</html>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
