@@ -399,6 +399,7 @@
                         <div style="font-size: 18px; margin: 5px 0; color: #fbbf24;">🍰 <span id="playerBAKE">0</span> BAKE</div>
                         <div style="font-size: 18px; margin: 5px 0; color: #22c55e;">🏆 <span id="killCount">0</span> kills</div>
                         <div style="font-size: 18px; margin: 5px 0; color: #ec4899;">🔥 <span id="streakCount">0</span>x streak</div>
+                        <div id="tacticalsDisplay" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155;"></div>
                     </div>
                     
                     <!-- Game Info (Top Right) -->
@@ -921,8 +922,37 @@
             document.getElementById('playerHP').textContent = hp;
             document.getElementById('playerMaxHP').textContent = hp;
             
+            // Display equipped tacticals
+            updateTacticalsDisplay();
+            
             initializeGame(icon, hp, dmg);
             showSarahMessage('start');
+        }
+        
+        function updateTacticalsDisplay() {
+            const display = document.getElementById('tacticalsDisplay');
+            if (!inventory.tacticals || inventory.tacticals.length === 0) {
+                display.innerHTML = '<div style="font-size: 14px; color: #64748b;">No tacticals equipped</div>';
+                return;
+            }
+            
+            const tacticalNames = {
+                'orbital': '🛸 Orbital',
+                'timeslow': '⏱️ Time Slow',
+                'turret': '🔫 Turret',
+                'airstrike': '✈️ Airstrike',
+                'shield': '🛡️ Shield',
+                'emp': '💣 EMP',
+                'heal': '❤️ Heal',
+                'decoy': '👻 Decoy'
+            };
+            
+            let html = '<div style="font-size: 14px; color: #a855f7; margin-bottom: 5px;">TACTICALS:</div>';
+            inventory.tacticals.slice(0, 4).forEach((tactical, i) => {
+                const name = tacticalNames[tactical] || tactical;
+                html += `<div style="font-size: 14px; color: #94a3b8; margin: 3px 0;">[${i+1}] ${name}</div>`;
+            });
+            display.innerHTML = html;
         }
         
         function initializeGame(icon, hp, dmg) {
@@ -1109,6 +1139,8 @@
                     const tactical = inventory.tacticals[slot];
                     keys[key] = false; // Prevent rapid fire
                     
+                    console.log(`Activated tactical slot ${slot}: ${tactical}`); // Debug
+                    
                     // Apply tactical effects
                     if (tactical === 'orbital' || tactical === 'airstrike') {
                         // Damage all enemies on screen
@@ -1117,16 +1149,32 @@
                         });
                         player.tacticalCooldowns[slot] = 600; // 10 second cooldown
                         showSarahMessage('pickup_damage');
+                        
+                        // Visual feedback
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `💥 ${tactical.toUpperCase()} ACTIVATED!`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 1000);
                     } else if (tactical === 'shield') {
                         player.shield = true;
                         player.shieldTime = 600; // 10 seconds
                         player.tacticalCooldowns[slot] = 600;
                         showSarahMessage('pickup_shield');
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `🛡️ SHIELD ACTIVATED!`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 1000);
                     } else if (tactical === 'heal') {
                         player.hp = Math.min(player.maxHp, player.hp + 100);
                         document.getElementById('playerHP').textContent = Math.floor(player.hp);
                         player.tacticalCooldowns[slot] = 300; // 5 second cooldown
                         showSarahMessage('pickup_health');
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `❤️ +100 HP!`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 1000);
                     } else if (tactical === 'emp') {
                         // Slow all enemies for 5 seconds
                         enemies.forEach(enemy => {
