@@ -1143,18 +1143,38 @@
                     
                     // Apply tactical effects
                     if (tactical === 'orbital' || tactical === 'airstrike') {
-                        // Damage all enemies on screen
+                        // MASSIVE damage to all enemies + visual feedback
+                        let killCount = 0;
                         enemies.forEach(enemy => {
-                            enemy.hp -= 100;
+                            enemy.hp -= 200; // Doubled damage so you actually see results
+                            if (enemy.hp <= 0) killCount++;
                         });
-                        player.tacticalCooldowns[slot] = 600; // 10 second cooldown
+                        player.tacticalCooldowns[slot] = 600;
                         showSarahMessage('pickup_damage');
                         
-                        // Visual feedback
+                        // Screen shake effect
+                        canvas.style.transform = 'translate(10px, 10px)';
+                        setTimeout(() => {
+                            canvas.style.transform = 'translate(-10px, -10px)';
+                            setTimeout(() => {
+                                canvas.style.transform = 'translate(5px, -5px)';
+                                setTimeout(() => {
+                                    canvas.style.transform = 'translate(0, 0)';
+                                }, 50);
+                            }, 50);
+                        }, 50);
+                        
+                        // Big visual notification
                         const notif = document.getElementById('killNotif');
-                        notif.innerHTML = `💥 ${tactical.toUpperCase()} ACTIVATED!`;
+                        notif.innerHTML = `💥 ${tactical.toUpperCase()} STRIKE! ${killCount} KILLS!`;
+                        notif.style.backgroundColor = 'rgba(239, 68, 68, 0.95)';
+                        notif.style.fontSize = '32px';
                         notif.style.display = 'block';
-                        setTimeout(() => { notif.style.display = 'none'; }, 1000);
+                        setTimeout(() => { 
+                            notif.style.display = 'none';
+                            notif.style.backgroundColor = '';
+                            notif.style.fontSize = '24px';
+                        }, 2000);
                     } else if (tactical === 'shield') {
                         player.shield = true;
                         player.shieldTime = 600; // 10 seconds
@@ -1184,21 +1204,60 @@
                         });
                         player.tacticalCooldowns[slot] = 450; // 7.5 second cooldown
                         showSarahMessage('pickup_speed');
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `💣 EMP BLAST! ENEMIES SLOWED!`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 1500);
                     } else if (tactical === 'turret') {
-                        // Auto-shoot nearby enemies for 10 seconds
+                        // Deploy visible turret that auto-shoots
+                        const turretX = player.x;
+                        const turretY = player.y;
+                        
+                        // Create visual turret marker
+                        let turretActive = true;
                         const turretInterval = setInterval(() => {
+                            if (!turretActive) {
+                                clearInterval(turretInterval);
+                                return;
+                            }
+                            
                             enemies.forEach(enemy => {
-                                const dx = enemy.x - player.x;
-                                const dy = enemy.y - player.y;
+                                const dx = enemy.x - turretX;
+                                const dy = enemy.y - turretY;
                                 const dist = Math.sqrt(dx*dx + dy*dy);
-                                if (dist < 300) {
-                                    enemy.hp -= 5;
+                                if (dist < 400) {
+                                    enemy.hp -= 15; // Increased damage so you see health bars drop
+                                    
+                                    // Create bullet visual from turret to enemy
+                                    bullets.push({
+                                        x: turretX,
+                                        y: turretY,
+                                        vx: (dx/dist) * 15,
+                                        vy: (dy/dist) * 15,
+                                        damage: 0, // Visual only
+                                        isPlayer: true,
+                                        size: 6,
+                                        isTurret: true
+                                    });
                                 }
                             });
-                        }, 100);
-                        setTimeout(() => clearInterval(turretInterval), 10000);
-                        player.tacticalCooldowns[slot] = 600; // 10 second cooldown
-                        showSarahMessage('pickup_damage');
+                        }, 500); // Fire every 0.5 seconds
+                        
+                        setTimeout(() => { 
+                            turretActive = false;
+                            const notif = document.getElementById('killNotif');
+                            notif.innerHTML = `🔫 TURRET EXPIRED`;
+                            notif.style.display = 'block';
+                            setTimeout(() => { notif.style.display = 'none'; }, 800);
+                        }, 10000);
+                        
+                        player.tacticalCooldowns[slot] = 600;
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `🔫 AUTO-TURRET DEPLOYED!`;
+                        notif.style.display = 'block';
+                        setTimeout(() => { notif.style.display = 'none'; }, 1000);
                     } else if (tactical === 'decoy') {
                         // Create fake player that enemies target
                         const decoy = {
@@ -1212,10 +1271,25 @@
                     } else if (tactical === 'timeslow') {
                         // Slow down time (increase player speed, slow bullets)
                         const origSpeed = player.speed;
-                        player.speed *= 2;
-                        setTimeout(() => { player.speed = origSpeed; }, 8000);
+                        player.speed *= 2.5;
+                        setTimeout(() => { 
+                            player.speed = origSpeed;
+                            const notif = document.getElementById('killNotif');
+                            notif.innerHTML = `⏱️ TIME NORMAL`;
+                            notif.style.display = 'block';
+                            setTimeout(() => { notif.style.display = 'none'; }, 800);
+                        }, 8000);
                         player.tacticalCooldowns[slot] = 900; // 15 second cooldown
                         showSarahMessage('pickup_speed');
+                        
+                        const notif = document.getElementById('killNotif');
+                        notif.innerHTML = `⏱️ TIME DISTORTION ACTIVE!`;
+                        notif.style.backgroundColor = 'rgba(139, 92, 246, 0.95)';
+                        notif.style.display = 'block';
+                        setTimeout(() => { 
+                            notif.style.display = 'none';
+                            notif.style.backgroundColor = '';
+                        }, 1500);
                     }
                 }
             }
