@@ -354,7 +354,7 @@
                 <div style="background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
                     <h3 style="color: #10b981; margin-bottom: 15px;">🎟️ ENTRY FEE: 1 SGB</h3>
                     <input type="text" id="username" placeholder="ENTER USERNAME" maxlength="8" style="width: 300px; background: #1e293b; border: 2px solid #334155; color: white; padding: 15px; border-radius: 8px; text-align: center; font-size: 18px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">
-                    <button class="wallet-btn" onclick="selectVehicle()" style="background: linear-gradient(135deg, #10b981, #059669); display: block; margin: 0 auto;">💸 PAY 1 SGB & CHOOSE VEHICLE</button>
+                    <button id="payEntryBtn" class="wallet-btn" onclick="selectVehicle()" style="background: linear-gradient(135deg, #10b981, #059669); display: block; margin: 0 auto;">💸 PAY 1 SGB & CHOOSE VEHICLE</button>
                 </div>
             </div>
             
@@ -673,7 +673,18 @@
         }
         
         async function connectWallet() {
+            const walletBtn = document.getElementById('walletBtn');
+            const originalText = walletBtn ? walletBtn.innerHTML : '';
+            
             try {
+                // Show loading state
+                if (walletBtn) {
+                    walletBtn.disabled = true;
+                    walletBtn.innerHTML = '⏳ Opening MetaMask...';
+                    walletBtn.style.opacity = '0.7';
+                    walletBtn.style.cursor = 'not-allowed';
+                }
+                
                 console.log("Connecting...");
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 await provider.send("eth_requestAccounts", []);
@@ -709,9 +720,14 @@
                 sgbBalance = parseFloat(ethers.utils.formatEther(sgbBalanceWei));
                 
                 // Update UI
-                document.getElementById('walletBtn').textContent = '✓ Connected';
-                document.getElementById('walletBtn').className = 'wallet-btn wallet-connected';
-                document.getElementById('walletBtn').onclick = null;
+                if (walletBtn) {
+                    walletBtn.textContent = '✓ Connected';
+                    walletBtn.className = 'wallet-btn wallet-connected';
+                    walletBtn.onclick = null;
+                    walletBtn.disabled = false;
+                    walletBtn.style.opacity = '1';
+                    walletBtn.style.cursor = 'default';
+                }
                 
                 // Show import token button
                 document.getElementById('importTokenBtn').style.display = 'inline-block';
@@ -732,7 +748,15 @@
                 
             } catch (error) {
                 console.error("Connection error:", error);
-                alert('Failed to connect: ' + error.message);
+                showCustomModal('❌ Connection Failed', error.message);
+                
+                // Reset button on error
+                if (walletBtn && originalText) {
+                    walletBtn.disabled = false;
+                    walletBtn.innerHTML = originalText;
+                    walletBtn.style.opacity = '1';
+                    walletBtn.style.cursor = 'pointer';
+                }
             }
         }
         
@@ -814,16 +838,31 @@
                 return;
             }
             
+            const payBtn = document.getElementById('payEntryBtn');
+            const originalText = payBtn.innerHTML;
+            
             try {
                 const entryFee = ethers.utils.parseEther('1');
                 
                 const confirmed = await showCustomModal('💰 Entry Fee', 'Pay 1 SGB to enter?\n\nThis will be added to the prize pool.', [{text: 'Pay & Play'}, {text: 'Cancel'}]);
                 if (!confirmed) return;
                 
+                // Show loading state
+                payBtn.disabled = true;
+                payBtn.innerHTML = '⏳ Opening MetaMask...';
+                payBtn.style.opacity = '0.7';
+                payBtn.style.cursor = 'not-allowed';
+                
+                showCustomModal('💬 Sarah says:', 'Check your MetaMask popup to confirm the transaction!');
+                
                 const tx = await signer.sendTransaction({
                     to: CONTRACTS.POOL_CONTRACT,
                     value: entryFee
                 });
+                
+                // Update to processing state
+                payBtn.innerHTML = '⏳ Processing transaction...';
+                
                 await tx.wait();
                 
                 const newSgbBalance = await provider.getBalance(wallet);
@@ -838,6 +877,12 @@
             } catch (error) {
                 console.error('Entry fee error:', error);
                 showCustomModal('❌ Transaction Failed', error.message);
+                
+                // Reset button on error
+                payBtn.disabled = false;
+                payBtn.innerHTML = originalText;
+                payBtn.style.opacity = '1';
+                payBtn.style.cursor = 'pointer';
             }
         }
         
@@ -1691,9 +1736,12 @@
                 
                 const sgbWei = ethers.utils.parseEther(sgbCost.toString());
                 
-                showCustomModal('💁‍♀️ Processing', 'Swapping SGB for BAKE... Blockchain working :)', [{text: 'OK'}]);
+                showCustomModal('⏳ Opening MetaMask', 'Check your MetaMask popup to confirm!');
                 
                 const tx = await poolContract.swapC2FLRforOOPS({value: sgbWei});
+                
+                showCustomModal('⏳ Processing', 'Transaction submitted! Waiting for blockchain confirmation...');
+                
                 await tx.wait();
                 
                 // Update balances
@@ -1743,13 +1791,17 @@
                 const sgbWei = ethers.utils.parseEther(sgbAmount.toString());
                 
                 // Step 1: Approve
-                showCustomModal('💁‍♀️ Step 1 of 2', 'Approving BAKE... Blockchain working :)', [{text: 'OK'}]);
+                showCustomModal('⏳ Step 1 of 2', 'Check MetaMask to approve BAKE spending...');
                 const approveTx = await bakeContract.approve(CONTRACTS.POOL_CONTRACT, bakeWei);
+                
+                showCustomModal('⏳ Step 1 of 2', 'Approval submitted! Waiting for confirmation...');
                 await approveTx.wait();
                 
                 // Step 2: Add liquidity
-                showCustomModal('💁‍♀️ Step 2 of 2', 'Adding liquidity... Blockchain working :)', [{text: 'OK'}]);
+                showCustomModal('⏳ Step 2 of 2', 'Check MetaMask to add liquidity...');
                 const tx = await poolContract.addLiquidity(bakeWei, {value: sgbWei});
+                
+                showCustomModal('⏳ Step 2 of 2', 'Transaction submitted! Waiting for confirmation...');
                 await tx.wait();
                 
                 const newBalance = await bakeContract.balanceOf(wallet);
@@ -1799,22 +1851,27 @@
                 
                 let tx;
                 if (fromToken === 'SGB') {
-                    // Show loading state
-                    showCustomModal('💁‍♀️ Processing', 'Blockchain working... one moment please :)', [{text: 'OK'}]);
+                    showCustomModal('⏳ Opening MetaMask', 'Check your MetaMask popup to confirm swap!');
                     
                     const sgbWei = ethers.utils.parseEther(fromAmount.toString());
                     tx = await poolContract.swapC2FLRforOOPS({value: sgbWei});
+                    
+                    showCustomModal('⏳ Processing', 'Swap submitted! Waiting for confirmation...');
                 } else {
                     const bakeWei = ethers.utils.parseEther(fromAmount.toString());
                     
                     // Step 1: Approve
-                    showCustomModal('💁‍♀️ Step 1 of 2', 'Approving BAKE... Blockchain working :)', [{text: 'OK'}]);
+                    showCustomModal('⏳ Step 1 of 2', 'Check MetaMask to approve BAKE...');
                     const approveTx = await bakeContract.approve(CONTRACTS.POOL_CONTRACT, bakeWei);
+                    
+                    showCustomModal('⏳ Step 1 of 2', 'Approval submitted! Waiting for confirmation...');
                     await approveTx.wait();
                     
                     // Step 2: Swap
-                    showCustomModal('💁‍♀️ Step 2 of 2', 'Swapping... Blockchain working :)', [{text: 'OK'}]);
+                    showCustomModal('⏳ Step 2 of 2', 'Check MetaMask to confirm swap...');
                     tx = await poolContract.swapOOPSforC2FLR(bakeWei);
+                    
+                    showCustomModal('⏳ Step 2 of 2', 'Swap submitted! Waiting for confirmation...');
                 }
                 
                 await tx.wait();
