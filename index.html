@@ -463,7 +463,7 @@
         const CONTRACTS = {
             BAKE_TOKEN: '0xBA3a30FFd8a8a18C90b275FC7fE2F8EFd77F30Ce',
             GAME_CONTRACT: '0xaB27737d60ce0FaC521f82e3d2703d0D1c279E49',
-            POOL_CONTRACT: '0xAa2D4a6A2821E39CBCa695358DAeDDb4137316C3',
+            POOL_CONTRACT: '0x731022d05e873309C704acAf983301B0e59DeF09',
             WSGB: '0x02f0826ef6aD107Cfc861152B32B52fD11BaB9ED',
             FTSO_REGISTRY: '0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019',
             STOADZ_PROVIDER: '0xa0E1FBA30e75e2d0D6C428cFF4B3b6A06233422b'
@@ -1437,18 +1437,38 @@
                 });
             }
             
-            const wsgbInput = document.getElementById('wsgbInput');
-            if (wsgbInput) {
-                wsgbInput.addEventListener('input', function() {
-                    const wsgbAmount = parseFloat(this.value) || 0;
-                    const poolWsgb = parseFloat(document.getElementById('poolWsgb').textContent.replace(/,/g, '')) || 0;
-                    const poolBake = parseFloat(document.getElementById('poolBake').textContent.replace(/,/g, '')) || 0;
-                    if (wsgbAmount > 0 && poolWsgb > 0 && poolBake > 0) {
-                        const currentRatio = poolBake / poolWsgb;
-                        document.getElementById('bakeRequired').value = (wsgbAmount * currentRatio).toFixed(2);
-                    }
-                });
+        const wsgbInput = document.getElementById('wsgbInput');
+if (wsgbInput) {
+    wsgbInput.addEventListener('input', async function() {
+        const wsgbAmount = parseFloat(this.value) || 0;
+        const bakeInput = document.getElementById('bakeRequired');
+        
+        if (wsgbAmount <= 0 || !poolContract) {
+            bakeInput.value = '';
+            return;
+        }
+        
+        try {
+            const sgbWei = ethers.utils.parseEther(wsgbAmount.toString());
+            const requiredBakeWei = await poolContract.getRequiredBAKE(sgbWei);
+            const requiredBake = parseFloat(ethers.utils.formatEther(requiredBakeWei));
+            
+            if (requiredBake > 0) {
+                bakeInput.value = Math.floor(requiredBake).toLocaleString();
+            } else {
+                bakeInput.value = '';
+                bakeInput.placeholder = 'First LP - enter any amount';
+                bakeInput.removeAttribute('readonly');
+                bakeInput.style.color = 'white';
             }
+        } catch (e) {
+            bakeInput.value = '';
+            bakeInput.placeholder = 'First LP - enter any amount';
+            bakeInput.removeAttribute('readonly');
+            bakeInput.style.color = 'white';
+        }
+    });
+}
             
             const swapFromAmount = document.getElementById('swapFromAmount');
             const swapFromToken = document.getElementById('swapFromToken');
