@@ -56,7 +56,6 @@
                 <div class="fomo-stat"><div class="price-ticker">$<span id="pondPriceUSD">0.000084</span></div><div class="fomo-label">POND Price</div></div>
                 <div class="fomo-stat"><div class="fomo-value" style="color: #8b5cf6;">$<span id="marketcapLP">0</span></div><div class="fomo-label">Market Cap</div></div>
                 <div class="fomo-stat"><div class="fomo-value" style="color: #22c55e;"><span id="priceChangePercent">+0.00</span>%</div><div class="fomo-label">24h Change</div></div>
-                <div class="fomo-stat"><div class="fomo-value">$<span id="liquidityValue">0</span></div><div class="fomo-label">Market Cap</div></div>
             </div>
         </div>
         <div class="tabs">
@@ -449,7 +448,24 @@
         
         function switchTab(tab) { document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); }); document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); }); document.querySelector('[onclick="switchTab(\''+tab+'\')"]').classList.add('active'); document.getElementById(tab + 'Tab').classList.add('active'); if (tab === 'leaderboard') updateLeaderboardDisplay(); if (tab === 'marketplace') showCategory('tacticals'); if (tab === 'pool' && !wallet) loadPoolDataWithoutWallet(); }
         
-        async function loadPoolDataWithoutWallet() { try { const tempProvider = new ethers.providers.JsonRpcProvider(SONGBIRD_RPC); const tempPoolContract = new ethers.Contract(CONTRACTS.POOL_CONTRACT, ["function reserveSGB() view returns (uint256)", "function reservePOND() view returns (uint256)"], tempProvider); const wsgbReserve = await tempPoolContract.reserveSGB(); const pondReserve = await tempPoolContract.reservePOND(); const wsgbAmount = parseFloat(ethers.utils.formatEther(wsgbReserve)); const pondAmount = parseFloat(ethers.utils.formatEther(pondReserve)); if (wsgbAmount > 0 && pondAmount > 0) { const price = wsgbAmount / pondAmount; const priceUSD = price * sgbPriceUSD; const marketCap = priceUSD * 11900000000; document.getElementById('marketcapLP').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}); document.getElementById('liquidityValue').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}); } } catch (e) { console.log('Could not load pool data:', e); } }
+        async function loadPoolDataWithoutWallet() { try { const tempProvider = new ethers.providers.JsonRpcProvider(SONGBIRD_RPC); const tempPoolContract = new ethers.Contract(CONTRACTS.POOL_CONTRACT, ["function reserveSGB() view returns (uint256)", "function reservePOND() view returns (uint256)"], tempProvider); const wsgbReserve = await tempPoolContract.reserveSGB(); const pondReserve = await tempPoolContract.reservePOND(); const wsgbAmount = parseFloat(ethers.utils.formatEther(wsgbReserve)); const pondAmount = parseFloat(ethers.utils.formatEther(pondReserve)); 
+            document.getElementById('poolWsgb').textContent = wsgbAmount.toFixed(2);
+            document.getElementById('poolBake').textContent = Math.floor(pondAmount).toLocaleString();
+            if (wsgbAmount > 0 && pondAmount > 0) { const price = wsgbAmount / pondAmount; 
+                document.getElementById('pondPrice').textContent = price.toFixed(6);
+                const priceUSD = price * sgbPriceUSD; 
+                document.getElementById('pondPriceUSD').textContent = priceUSD.toFixed(6);
+                const marketCap = priceUSD * 11900000000; 
+                document.getElementById('marketCap').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                document.getElementById('marketcapLP').textContent = marketCap.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}); 
+                const priceChange = ((price - 0.000003112356) / 0.000003112356) * 100;
+                const changeEl = document.getElementById('allTimeChange');
+                const changePercentEl = document.getElementById('priceChangePercent');
+                changeEl.textContent = 'All-Time: ' + (priceChange >= 0 ? '+' : '') + priceChange.toFixed(2) + '%';
+                changeEl.style.color = priceChange >= 0 ? '#10b981' : '#ef4444';
+                changePercentEl.textContent = (priceChange >= 0 ? '+' : '') + priceChange.toFixed(2);
+                changePercentEl.parentElement.style.color = priceChange >= 0 ? '#22c55e' : '#ef4444';
+            } } catch (e) { console.log('Could not load pool data:', e); } }
         
         window.addEventListener('load', async function() { await fetchSGBPrice(); updateHistoryTable(); updateLeaderboardDisplay(); updateCreditsDisplay(); loadPoolDataWithoutWallet(); 
             
